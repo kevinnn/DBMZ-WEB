@@ -1,0 +1,75 @@
+<ion-view view-title="个人中心" class="userInfo-page">
+	<ion-content scrollbar-y=false>
+
+		<div class="div-all">
+			<!-- 未登录 & 已登录 -->
+			<div class="avatarBg">
+				<p class="avatar" ng-cloak ng-show="!user">
+					<img ng-src="/public/img/mobile/avatar_defaul.jpg">
+				</p>
+				<p class="avatar" ng-cloak ng-show="user">
+					<a href="#/tab/profile/setting"><img ng-src="{{user.avatorUrl}}"/></a>
+				</p>
+				<p class="login-but" ng-cloak ng-show="!user">
+					<button class="button button-outline" ng-click="checkLoginAndModal()">马上登陆</button>
+				</p>
+				<p class="login-but" ng-cloak ng-show="user">
+					<button class="button button-outline" style="border:none;">{{user.userName}}</button>
+				</p>
+				<div class="alpha"></div>
+			</div>
+			<div class="div-middle">
+				<a class="point" href="#tab/profile/credit" ng-click="checkLoginAndModal($event)">
+					<i class="icon_point"></i>
+					<span ng-cloak>积分：{{user.credits || 0}}</span>
+				</a>
+				<a class="balance" href="#tab/profile/balance" ng-click="checkLoginAndModal($event)">
+					<i class="icon_balance"></i>
+					<span ng-cloak>余额：{{user.balance || 0}} 元</span>
+				</a>
+			</div>
+			<div class="list info-list div-main">
+				<!-- 夺宝记录 & 中奖记录 & 我的晒单 -->
+				<a class="item item-icon-left" href="#tab/profile/recordBuy" ng-click="checkLoginAndModal($event)">
+	    			<i class="icon ion-ios-paper calm"></i>夺宝记录
+	  			</a>
+	  			<a class="item item-icon-left" href="#tab/profile/recordWin" ng-click="checkLoginAndModal($event)">
+	    			<i class="icon ion-film-marker assertive"></i>中奖记录
+	  			</a>
+	  			<a class="item item-icon-left" href="#tab/profile/expose" ng-click="checkLoginAndModal($event)">
+	    			<i class="icon ion-android-camera royal"></i>我的晒单
+	  			</a>
+				<!-- 余额充值 & 收货地址 -->
+				<div>
+					<a class="item item-icon-left" ng-click="openRedPackage($event)" ng-show="user">
+		    			<i class="icon icon-share"></i>分享领红包
+		  			</a>
+					<a class="item item-icon-left" href="#tab/profile/recharge" ng-click="checkLoginAndModal($event)">
+		    			<i class="icon ion-card balanced"></i>余额充值
+		  			</a>
+		  			<a class="item item-icon-left" href="#tab/profile/address" ng-click="checkLoginAndModal($event)">
+		    			<i class="icon ion-compose dark"></i>收货地址
+		  			</a>
+				</div>
+				<!-- 设置 -->
+				<div>
+	  				<a class="item item-icon-left" href="#tab/profile/setting" ng-click="checkLoginAndModal($event)">
+		    			<i class="icon ion-android-settings dark"></i>设置
+		  			</a>
+		  			<a class="item item-icon-left" href="#tab/profile/help" ng-click="checkLoginAndModal($event)">
+		    			<i class="icon ion-information-circled calm"></i>服务帮助
+		  			</a>
+		  			<a class="item item-icon-left" href="#tab/profile/suggest" ng-click="checkLoginAndModal($event)">
+		    			<i class="icon ion-chatbox-working positive"></i>用户反馈
+		  			</a>
+				</div>
+				<!-- 代理 -->
+				<div ng-show="user && user.isDelegate == 1">
+					<a class="item item-icon-left" href="#/tab/profile/agency" ng-click="checkLoginAndModal($event)">
+		    			<i class="icon ion-social-usd positive"></i>佣金汇总
+		  			</a>
+		  		</div>
+			</div>
+		</div>
+	</ion-content>
+</ion-view>

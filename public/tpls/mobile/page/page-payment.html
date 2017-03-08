@@ -1,0 +1,38 @@
+<ion-view view-title="支付详情" class="payment-page" cache-view=false>
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button ng-click="exit();$event.stopPropagation();"></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content>
+		
+		<div class="cashier-info">
+			<p class="cashier-num">商品数量 <span class="main-color">{{records.length}}</span> 件</p>
+			<div class="cashier-list">
+				<div ng-repeat="record in records"><p>{{record.title}} </p><span class="right"><span class="main-color">{{record.count}}</span>人次</span></div>
+			</div>
+			<p class="cashier-price"><span class="time">请在{{timeout | dateTransfer}}内完成支付，否则自动取消!</span>总额 <span class="money">￥{{count}}</span></p>
+		</div>
+
+		<div class="payment">
+			<div class="choosePay">
+				<div class="balance-pay clearfix" ng-click="chooseBalance()">
+					<p class="balance-pay-text">使用余额 <span class="black999-text">(账户余额：{{user.balance}}夺宝币)</span></p>
+					<img class="img-right" ng-show="!balanceBtnCheck" src="/public/img/mobile/btn-unchecked@2x.png"/>
+					<img class="img-right" ng-show="balanceBtnCheck" src="/public/img/mobile/btn-checked@2x.png"/>
+				</div>
+				<div ng-hide="wxHide">
+					<p class="tip">推荐支付方式</p>
+					<div class="payment clearfix">
+						<img class="img-left" src="/public/img/mobile/pay-wechat@2x.png"/>
+						<p>微信支付</p>
+						<p class="payDetail">推荐安装微信5.0及以上版本的使用</p>
+						<img class="img-right" src="/public/img/mobile/btn-checked@2x.png"/>
+					</div>
+				</div>
+			</div>
+			<div class="confirm" ng-click="pay()">确认支付<span class="big" ng-show="(count-balancePay) > 0">￥{{(count-balancePay).toFixed(2)}}</span></div>
+		</div>
+	</ion-content>
+	
+</ion-view>

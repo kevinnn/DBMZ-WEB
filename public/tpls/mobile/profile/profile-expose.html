@@ -1,0 +1,53 @@
+<ion-view view-title="我的晒单" class="profile-expose-page has-tabs-top" cache-view=false>
+
+    <ion-nav-bar class="bar-stable has-tabs-top">
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
+
+    <div class="bar bar-subheader" ng-show="addressCount !== 0">
+        <div class="subheader-side-bar"></div>
+        <h3 class="main-color">有奖就要晒出来！晒单成功立领积分红包！</h3>
+    </div>
+    <ion-content scrollbar-y="false" class="has-subheader" ng-show="addressCount !== 0">
+        <ion-refresher pulling-text="下拉刷新.." on-refresh="doRefresh()"></ion-refresher>
+        <div class="empty-expose" ng-show="remainRecords.length==0 && finishRecords.length==0">
+            <div class="empty-expose-image"></div>
+            <h3 class="empty-expose-hint">您还没有晒过单哦</h3>
+            <button class="button main-color empty-expose-button" ng-click="toIndex()">立即夺宝</button>
+        </div>
+        <div class="waitting-expose-list" ng-repeat="record in remainRecords track by $index">
+            <img class="winner-tip" ng-src="/public/img/mobile/winner-tip@2x.png" src="/public/img/mobile/winner-tip@2x.png">
+            <a href="" class="item item-thumbnail-left">
+                <img ng-src="{{record.productImage}}" alt="">
+                <h2 class="list-title">{{record.productTitle}}</h2>
+                <p class="list-term">期号：{{record.term}}</p>
+                <button class="button main-color immediate-expose-button" ng-click="toAddShow({{record.yungouId}})">立即晒单</button>
+            </a>
+        </div>
+        <div class="exposed-list" ng-repeat="record in finishRecords track by $index">
+            <div class="left">
+            <img ng-src="{{user.avatorUrl}}" class="user-avator">
+            </div>
+            <div class="right">
+                <div style="font-size: 0;">
+                    <div class="user-name">
+                        {{user.userName}}
+                    </div>
+                    <div class="win-time">
+                        {{record.createdTime}}
+                    </div>
+                </div>
+                <div class="content">
+                    <h3 class="content-title">{{record.title}}</h3>
+                    <p class="content-productTitle">{{record.productTitle}}</p>
+                    <p class="content-term">期号：{{record.term}}</p>
+                    <p class="content-content">{{record.content}}</p>
+                    <div class="content-img-list">
+                        <img ng-repeat="img in record.imgUrls track by $index" ng-src="{{img}}" alt="">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <ion-infinite-scroll ng-if="remainRecords.length > 0 && hasMoreDataOfRemain || finishRecords.length > 0 && hasMoreDataOfFinish" on-infinite="loadMoreData()" distance="2%" immediate-check=false></ion-infinite-scroll>
+    </ion-content>
+</ion-view>

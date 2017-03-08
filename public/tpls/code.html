@@ -1,0 +1,18 @@
+<div class="dialog-box">
+    <div class="w-msgbox-hd">我的夺宝号码</div>
+    <div class="w-msgbox-bd">
+    	<div id="pro-view-25">
+            <div class="w-duobaoCodeList" pro="codeWarper">
+                <div class="w-duobaoCodeList-hd" pro="codeTitle">您本期总共参与了{{ngDialogData.numbersCount}}人次</div>
+                <div pro="list" class="w-duobaoCodeList-list">
+                    <dl class="iItem f-clear" id="pro-view-26" ng-repeat="item in ngDialogData.items track by $index">
+                        <dt class="iItemTime">{{item.buyTime}}</dt>
+                        <dt>
+                        	<span class="iCodeItem" ng-repeat="number in item.numbers track by $index" ng-class="{'txt-impt' : ngDialogData.result==number}">{{number}}</span>
+                        </dt>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

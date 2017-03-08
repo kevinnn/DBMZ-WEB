@@ -1,0 +1,51 @@
+<ion-view view-title="" class="fuli-open-page">
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content class="fuli-open" scrollbar-y=true scrollbar-x=false>
+		<div class="fulibag-wrap">
+			<img class="fulibag" src="/public/img/mobile/fuli_open.png">
+			<span class="amout">1</span><span class="yuan">元</1span>
+		</div>
+		<ul class="list">
+            <li class="item province">
+                <label class="item item-input item-select">
+                    <span class="input-label">省 份</span>
+                    <select ng-model="address.province">
+                        <option>北京市</option>
+                        <option>广东省</option>
+                        <option>江苏省</option>
+                    </select>
+                </label>
+            </li>
+            <li class="item city">
+                <label class="item item-input item-select">
+                    <span class="input-label">城 市</span>
+                    <select ng-model="address.city">
+                        <option>北京市</option>
+                        <option>广州市</option>
+                        <option>东莞市</option>
+                    </select>
+                </label>
+            </li>
+            <li class="item area">
+                <label class="item item-input item-select">
+                    <span class="input-label">地 区</span>
+                    <select ng-model="address.area">
+                        <option>番禺区</option>
+                        <option>花都区</option>
+                        <option>天河区</option>
+                    </select>
+                </label>
+            </li>
+        </ul>
+	</ion-content>
+	<div class="fuli-info">
+        	<img src="/public/img/mobile/fuli-info.png" class="info">
+        	<hr class="left"><span>活动规则</span><hr class="right">
+        	<p>完善个人资料后, 即可成功领取价值1元红包!</p>
+        	<button class="button fuli-button">领取红包</button>
+    </div>
+</ion-view>

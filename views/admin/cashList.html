@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">钱包变动记录</h3></div>
+<div class="bk10"></div>
+
+<div class="table-list lr10">        
+  <!--start-->
+  <table width="100%" cellspacing="0">
+    <thead>
+		<tr>
+            <th align='center'>ID</th>
+            <th align='center'>用户名</th>
+            <th align='center'>变动时间</th>
+            <th align='center'>变动金额</th>
+			<th align='center'>类型</th> 
+			<th align='center'>是否被批准</th>
+		</tr>
+    </thead>
+    <tbody id="tbody">
+		
+  	</tbody>
+</table>
+</div><!--table-list end-->
+
+<div id="pages" style="margin:10px 10px">		
+	<ul>
+		<li id="totalPage"></li>
+		<li><a id='Page_Prev' href="javascript:void(0);">上一页</a></li>
+		<li><a id='Page_Next' href="javascript:void(0);">下一页</a></li>
+		<li><a id='Page_One' href="javascript:void(0);">首页</a></li>
+		<li><a id='Page_End' href="javascript:void(0);">尾页</a></li>
+	</ul>
+</div>
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return unescape(r[2]); return null;
+	}
+    function approveWithdraw(id) {
+		if (confirm("是否批准")) {
+			$.ajax({
+				url: "/admin/delegate/approveWithdraw",
+				type: "POST",
+				data: {
+					withdrawid : id
+				},
+				success: function (data) {
+					if (data.code == 200) {
+						location.reload();
+					}
+				}
+			})
+		}
+	}
+	$(document).ready(function () {
+		$.ajax({
+			url : "/admin/delegate/getWithdrawRecords"+location.search+"&type=0&limit=20",
+			type: "GET",
+			success: function (data) {
+				if (data.code == 200) {
+					var arr = data.data;
+					var str = "";
+					for (var i = 0; i < arr.length; i++) {
+						str += "<tr>"+
+								"<td align='center'>"+arr[i].id+"</td>"+
+								"<td align='center'>"+arr[i].userName+"</td>"+
+                                "<td align='center'>"+arr[i].time+"</td>"+								
+								"<td align='center'>"+(arr[i].type == 2 ? "-"+arr[i].amount : (arr[i].isApproved == 1 ? "+"+arr[i].amount : "(+"+arr[i].amount+")"))+"</td>"+
+								"<td align='center'>"+(arr[i].type == 2 ? "提现" : "返佣")+"</td>"+
+								"<td align='center'>"+(arr[i].type == 2 ? (arr[i].isApproved == 1 ? "是" : "否") : "")+"</td>"+
+							"</tr>";
+					}
+					$("#tbody").html(str);
+				}
+			}
+		});
+
+		$.ajax({
+			url : "/admin/delegate/getWithdrawCount"+location.search+"&type=0",
+			type: "GET",
+			success: function (data) {
+				if (data.code == 200) {
+					var count = data.data;
+					$("#totalPage").text("共 "+count+" 条");
+					
+					var page = getQueryString("page");
+					var delegateid = getQueryString("delegateid");
+					
+                    document.getElementById("Page_One").href = "/views/admin/withdrawList.html?page=1&delegateid="+delegateid;
+					if (page > 1) {
+						document.getElementById("Page_Prev").href = "/views/admin/withdrawList.html?page="+(page-1)+"&delegateid="+delegateid;
+					}
+					var end = parseInt(count/20)+(count%20 == 0 ? 0 : 1);
+					document.getElementById("Page_End").href = "/views/admin/withdrawList.html?page="+end+"&delegateid="+delegateid;
+					if (page*20 < count) {
+						document.getElementById("Page_Next").href = "/views/admin/withdrawList.html?page="+(parseInt(page)+1)+"&delegateid="+delegateid;
+					}
+				}
+			}
+		})
+	})
+</script>
+</body>
+</html> 

@@ -1,0 +1,22 @@
+<ion-modal-view class="profile-recordDetail-page">
+    <ion-header-view class="bar bar-header bar-stable">
+        <h1 class="title">夺宝详情</h1>
+        <button class="button button-icon icon ion-android-close" ng-click="numberModal.hide()"></button>
+    </ion-header-view>
+    <ion-content scrollbar-y="false" class="has-header">
+        <div class="profile-record-detail">
+            <div class="product-info">
+                <h3 class="product-title">{{title}}</h3>
+                <p class="product-term">商品期号：{{term}}</p>
+            </div>
+            <div class="yungou-info">
+                <ul class="list">
+                    <li class="yungou-title">已参与<span class="main-color">{{numbers.length}}</span>人次，以下是所有夺宝号码</li>
+                    <li class="yungou-number">
+                        <span ng-repeat="number in numbers track by $index" ng-class="{'active':number==result}">{{number}}</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </ion-content>
+</ion-modal-view>

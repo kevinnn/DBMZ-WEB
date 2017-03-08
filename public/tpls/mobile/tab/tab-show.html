@@ -1,0 +1,39 @@
+<ion-view view-title="晒单分享" class="show-page">
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y=true scrollbar-x=false>
+		<ion-refresher pulling-text="下拉刷新.." on-refresh="doRefresh()"></ion-refresher>
+
+		<!-- 没有记录时显示 -->
+		<div class="nullRecord" ng-show="shareInfos.length == 0 && init">
+			<img src="/public/img/mobile/null-show@2x.png"/>
+		</div>
+
+		<ion-list>
+			<ion-item class="show-card item-avatar" ng-repeat="shareInfo in shareInfos">
+				<!-- TODO 跳到他人主页 -->
+				<img class="avatar" ng-src="{{shareInfo.avatorUrl}}"><a href=""></a></img>
+				<div>
+					<p class="time">{{shareInfo.createdTime}}</p>
+					<!-- TODO 跳到他人主页 -->
+					<p><a class="userName" href="">{{shareInfo.userName}}</a></p>
+	  				<a href="#/tab/{{activedTab}}/show-{{shareInfo.showId}}-{{timeStamp}}">
+	  					<div class="content">
+		  					<p class="title">{{shareInfo.title}}</p>
+		  					<p class="proName">{{shareInfo.productTitle}}</p>
+							<p class="term">期号：{{shareInfo.term}}</p>
+							<p class="comment">{{shareInfo.content}}</p>
+							<div class="showImg">
+								<img ng-repeat="img in shareInfo.imgUrls track by $index" ng-src="{{img}}"></img>
+							</div>
+		  				</div>
+	  				</a>
+				</div>
+			</ion-item>
+		</ion-list>
+		<ion-infinite-scroll ng-if="shareInfos.length && hasMoreData" on-infinite="loadMore()" distance="2%" immediate-check=false></ion-infinite-scroll>
+	</ion-content>
+</ion-view>

@@ -1,0 +1,33 @@
+<ion-view view-title="往期夺宝" class="history-page">
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y="false">
+		<ion-refresher pulling-text="下拉刷新.." on-refresh="doRefresh()"></ion-refresher>
+		<!-- 没有记录时显示 -->
+		<div class="nullRecord" ng-show="records.length == 0">
+			<img src="/public/img/mobile/null-record@2x.png"/>
+		</div>
+
+		<ion-list ng-show="records.length > 0">
+			<ion-item class="history-card" ng-repeat="record in records track by $index">
+				<div class="header">
+					<p>(第{{record.term}}期) 揭晓时间: {{record.endTime}}</p>
+				</div>
+				<a href="#/tab/{{activedTab}}/yungou-{{record.yungouId}}-{{timeStamp}}" class="content">
+					<img ng-src="{{record.avatorUrl}}">
+					<div>
+						<p>中奖者: {{record.userName}}</p>
+						<p>幸运号码: <span class="main-color">{{record.result}}</span></p>
+						<p>本期参与: <span class="blue-text">{{record.count}}</span>人次</p>
+					</div>				
+					<i class="ion-chevron-right arrow"></i>
+				</a>
+			</ion-item>
+			<ion-infinite-scroll ng-if="records.length > 0 && hasMoreData" on-infinite="loadMore()" distance="2%" immediate-check=false></ion-infinite-scroll>
+		</ion-list>
+	</ion-content>
+	
+</ion-view>

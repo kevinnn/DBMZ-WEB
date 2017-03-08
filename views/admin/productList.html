@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台首页</title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/calendar-blue.css" type="text/css"> 
+<script type="text/javascript" charset="utf-8" src="/public/js/admin/calendar.js"></script>
+<script src="/public/js/jquery/jquery.min.js"></script>
+<style>
+body{ background-color:#fff}
+tr{ text-align:center}
+</style>
+<script type="text/javascript">
+    $.ajax({
+        url:'/admin/admin/isLogin',
+        type:'GET',
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = '/admin/login.html';
+            }
+        }
+    })
+</script>
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">商品管理</h3>
+    <span class="span_fenge lr5">|</span><a href="#">人气商品</a>
+    <span class="span_fenge lr5">|</span><a href="#">限时揭晓商品</a>
+    <span class="span_fenge lr5">|</span><a href="#">期数倒序</a>
+    <span class="span_fenge lr5">|</span><a href="#">单价倒序</a>
+    <span class="span_fenge lr5">|</span><a href="#">商品价格倒序</a>
+    <span class="span_fenge lr5">|</span><a href="#">已揭晓</a>
+    <span class="span_fenge lr5">|</span>
+    <a href="#"><font color='#f00'>期数已满商品</font></a>
+    <span class="span_fenge lr5">|</span>
+</div>
+<div class="bk10"></div>
+<div class="header-data lr10">
+	<b>提示:</b> 已经购买过的商品不能在修改，点击查看往期可以查看该商品的所有期数商品！
+	<br/>
+	<b>提示:</b> 因为商品添加后购买码已经生成成功,所以不能在本期内修改价格了.
+</div>
+<div class="bk10"></div>
+<form action="#" method="post" name="myform">
+<div class="table-list lr10">
+    <table width="100%" cellspacing="0">
+     	<thead>
+    		<tr>
+                <th width="5%">ID</th>        
+                <th width="25%">商品标题</th>    
+                <th width="8%">所属栏目</th>
+                <th width="8%">所属品牌</th>            
+                <th width="10%">总需</th>
+                <th width="5%">单价/元</th>
+                <th width="10%">是否上架</th>
+                <th width="3%">推荐</th>
+                <th width="3%">最新</th>
+                <th width="3%">最热</th>
+                <th width="15%">管理</th>
+			</tr>
+        </thead>
+        <tbody id="tbody">				
+           
+        </tbody>
+     </table>     
+</div>
+</form>
+	
+	<div id="pages">
+        <ul>
+            <li id="count"></li>
+            <li><a href="javascript:void(0);" id='Page_Prev'>上一页</a></li>
+            <li><a href="javascript:void(0);" id='Page_Next'>下一页</a></li>
+            <li><a href="javascript:void(0);" id='Page_One'>首页</a></li>
+            <li><a href="javascript:void(0);" id='Page_End'>尾页</a></li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+    var page = getQueryString('page');
+    var categoryId = getQueryString('categoryId');
+    var brandId = getQueryString('brandId');
+    var queryString = '';
+    page = page == null ? 1 : page;
+    queryString += categoryId == null ? '' : '&categoryId='+categoryId;
+    queryString += brandId == null ? '' : '&brandId='+brandId;
+    if (page > 1) {
+        document.getElementById('Page_Prev').href = '/views/admin/productList.html?page='+(page-1)+queryString;
+    }
+    document.getElementById('Page_One').href='/views/admin/productList.html?page=1'+queryString;
+
+    $.ajax({
+        url: '/admin/product/productCount'+location.search,
+        type: 'GET',
+        success: function (data) {
+            var count = data.data;
+            var next = document.getElementById('Page_Next');
+            if (page*20 < count) {
+                next.href = '/views/admin/productList.html?page='+(parseInt(page)+1)+queryString;
+            } else {
+                next.href = 'javascript:void(0)';
+            }
+            var totalPage = 1;
+            if (count % 20 != 0) {
+                totalPage = parseInt(count/20)+1;
+            } else {
+                totalPage = parseInt(count/20);
+            }
+            document.getElementById('Page_End').href = '/views/admin/productList.html?page='+totalPage+queryString;
+            $('#count').text("共 "+count+" 条");
+
+        }
+    })
+    $.ajax({
+        url: '/admin/product/productList'+location.search,
+        type: 'GET',
+        success: function (data) {
+            var objArr = data.data;
+            var str = "";
+            var obj;
+            for (var i = 0; i < objArr.length; i++) {
+                obj = objArr[i];
+                str += "<tr>"+
+                        "<td>"+obj['id']+"</td>"+
+                        "<td><span>"+obj['title']+"</span></td>"+
+                        "<td><a href='/views/admin/productList.html?categoryId="+obj['categoryId']+"'>"+obj['categoryName']+"</a></td>"+
+                        "<td><a href='/views/admin/productList.html?brandId="+obj['brandId']+"'>"+obj['brandName']+"</a></td>"+
+                        "<td>"+obj['price']+"</td>"+
+                        "<td>"+obj['singlePrice']+"</td>"+
+                        "<td>"+
+                            (obj['isOn']==1?"是":"否")+
+                            "[<a href='javascript:void(0)'; onclick='updateProduct("+obj['id']+","+obj['isOn']+")'>"+(obj['isOn']==1?'下架':'上架')+"</a>]"+
+                        "</td>"+
+                        "<td>"+(obj['isRecommend']==1 ? "是":"否")+"</td>"+
+                        "<td>"+(obj['isNew']==1 ? "是":"否")+"</td>"+
+                        "<td>"+(obj['isHot']==1 ? "是":"否")+"</td>"+
+                        "<td class='action'>"+
+                            "[<a href='/views/admin/productEdit.html?id="+obj['id']+"'>修改</a>]"+
+                            "[<a href='/views/admin/yungouList.html?productId="+obj['id']+"'>查看往期</a>]"+
+                        "</td>"+
+                        "</tr>";
+            }
+            $('#tbody').append(str);
+        }
+    });
+    function updateProduct(id,isOn) {
+        $.ajax({
+            url: "/admin/product/updateProduct",
+            type: "POST",
+            data: {
+                id: id,
+                isOn: 1-isOn
+            },
+            success: function (data) {
+                // console.log(data);
+                location.reload();
+            },
+            error: function (data) {
+                console.log(data)
+            }
+        });
+    }
+</script>
+</body>
+</html> 

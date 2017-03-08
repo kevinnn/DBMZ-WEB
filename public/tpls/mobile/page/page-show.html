@@ -1,0 +1,32 @@
+<ion-view view-title="晒单详情" class="showDetail-page" cache-view=true>
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y="false">
+		<div class="div-all" ng-cloak>
+			<div class="div-top">
+				<p class="title" ng-bind="showInfo.title"></p>
+				<img class="avatar" ng-src="{{showInfo.avatorUrl}}"/>
+				<p class="user">
+					<!-- TODO 跳到他人 -->
+					<a class="name" href="">{{showInfo.userName}}</a>
+					<span class="time">{{showInfo.createdTime}}</span>
+				</p>
+			</div>
+			<div class="div-middle">
+				<p>商品信息：<a href="#/tab/{{activedTab}}/yungou-{{showInfo.yungouId}}-{{timeStamp}}">{{showInfo.productTitle}}</a></p>
+				<p class="term">商品期号：{{showInfo.term}}</p>
+				<p class="count">本期参与：<span>{{showInfo.count}}</span>人次</p>
+				<p class="number">幸运号码：<span>{{showInfo.result}}</span></p>
+				<p class="time">揭晓时间：{{showInfo.endTime}}</p>
+			</div>
+			<div class="div-main">
+				<p>{{showInfo.content}}</p>
+				<img ng-repeat="imgUrl in showInfo.imgUrls track by $index" ng-src="{{imgUrl}}">
+			</div>
+		</div>	
+	</ion-content>
+	
+</ion-view>

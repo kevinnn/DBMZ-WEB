@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">充值记录</h3></div>
+<div class="bk10"></div>
+
+<div class="table-list lr10">        
+  <!--start-->
+  <table width="100%" cellspacing="0">
+    <thead>
+		<tr>
+            <th align='center'>ID</th>
+            <th align='center'>用户名</th>
+            <th align='center'>充值方式</th>
+            <th align='center'>充值时间</th>
+			<th align='center'>支付订单号</th> 
+			<th align='center'>充值总额</th>
+		</tr>
+    </thead>
+    <tbody id="tbody">
+		
+  	</tbody>
+</table>
+</div><!--table-list end-->
+
+<div id="pages" style="margin:10px 10px">		
+	<ul>
+		<li id="totalPage"></li>
+		<li><a id='Page_Prev' href="javascript:void(0);">上一页</a></li>
+		<li><a id='Page_Next' href="javascript:void(0);">下一页</a></li>
+		<li><a id='Page_One' href="javascript:void(0);">首页</a></li>
+		<li><a id='Page_End' href="javascript:void(0);">尾页</a></li>
+	</ul>
+</div>
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return unescape(r[2]); return null;
+	}
+	$(document).ready(function () {
+		$.ajax({
+			url : "/admin/balance/balanceList"+location.search,
+			type: "GET",
+			success: function (data) {
+				if (data.code == 200) {
+					var arr = data.data;
+					var str = "";
+					for (var i = 0; i < arr.length; i++) {
+						str += "<tr>"+
+								"<td align='center'>"+arr[i].id+"</td>"+
+								"<td align='center'>"+arr[i].userName+"</td>"+
+								"<td align='center'>"+(arr[i].payment == 1 ? "支付宝" : (arr[i].type == 2 ? "微信" : (arr[i].type == 3 ? "银联" : "网银")))+"</td>"+
+								"<td align='center'>"+arr[i].time+"</td>"+
+								"<td align='center'>"+arr[i].tradeId+"</td>"+
+								"<td align='center'>"+arr[i].amount+"</td>"+
+							"</tr>";
+					}
+					$("#tbody").html(str);
+				}
+			}
+		});
+
+		$.ajax({
+			url : "/admin/balance/balanceCount"+location.search,
+			type: "GET",
+			success: function (data) {
+				if (data.code == 200) {
+					var count = data.data;
+					$("#totalPage").text("共 "+count+" 条");
+					var query = "";
+					var type = getQueryString("type");
+					query += type ? ("&type="+type) : "";
+					document.getElementById("Page_One").href = "/views/admin/depositList.html?page=1"+query;
+					var page = getQueryString("page");
+					
+					if(page===null){
+						page = 1;
+					}
+					if (page > 1) {
+						document.getElementById("Page_Prev").href = "/views/admin/depositList.html?page="+(page-1)+query;
+					}
+					var end = parseInt(count/20)+(count%20 == 0 ? 0 : 1);
+					document.getElementById("Page_End").href = "/views/admin/depositList.html?page="+end+query;
+					if (page*20 < count) {
+						document.getElementById("Page_Next").href = "/views/admin/depositList.html?page="+(parseInt(page)+1)+query;
+					}
+				}
+			}
+		})
+	})
+</script>
+</body>
+</html> 

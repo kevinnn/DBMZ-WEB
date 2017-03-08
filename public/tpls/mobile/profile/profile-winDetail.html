@@ -1,0 +1,89 @@
+<ion-view view-title="信息确认" class="profile-winDetail-page has-tabs-top" cache-view=false>
+    <ion-nav-bar class="bar-stable has-tabs-top">
+        <ion-nav-buttons side="left">
+            <button ng-click="$ionicGoBack()" class="button back-button buttons button-clear header-item">
+            <i class="icon ion-chevron-left"></i>
+                幸运记录
+            </button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+    <ion-content scrollbar-y="false">
+        <div class="profile-winDetail-status">
+            <div class="profile-winDetail-title">
+                <h3>商品状态</h3>
+            </div>
+            <div class="circle-list">
+                <div class="circle-bar">
+                </div>
+                <div class="circle"></div>
+                <div class="circle" ng-class="{'current':record.winOrder.logisticsStatus==0,'future':record.winOrder.logisticsStatus!=0}" style="top: 75px;"></div>
+                <div class="circle" ng-class="{'current':record.winOrder.logisticsStatus==1,'future':record.winOrder.logisticsStatus!=1}" style="top: 130px;"></div>
+                <div class="circle" ng-class="{'current':record.winOrder.logisticsStatus==2,'future':record.winOrder.logisticsStatus!=2}" style="top: 185px;"></div>
+                <div class="circle" ng-class="{'current':record.winOrder.logisticsStatus>=3,'future':record.winOrder.logisticsStatus<3}" style="top: 240px;"></div>
+            </div>
+            <div class="list">
+                <li class="item">
+                    <p class="status-text black333-text">获得商品</p>
+                    <p class="status-time black666-text">{{record.winOrder.endTime}}</p>
+                </li>
+                <li class="item">
+                    <p class="status-text" ng-class="{'main-color':record.winOrder.logisticsStatus==0}">确认收货地址</p>
+                    <a class="status-button button main-color" href="/mobile.html#/tab/profile/winDetail-{{record.winOrder.winOrderId}}/address" ng-show="record.winOrder.logisticsStatus==0">确认地址</a>
+                    <p class="status-time black666-text" ng-hide="record.winOrder.logisticsStatus==0">{{record.winOrder.confirmAddressTime}}</p>
+                </li>
+                <li class="item">
+                    <p class="status-text" ng-class="{'main-color':record.winOrder.logisticsStatus==1}">商品派发</p>
+                    <p class="status-time yellow-color" ng-show="record.winOrder.logisticsStatus==1">请稍候...</p>
+                    <p class="status-time black666-text" ng-hide="record.winOrder.logisticsStatus<2">{{record.winOrder.deliveryTime}}</p>
+                </li>
+                <li class="item">
+                    <p class="status-text" ng-class="{'main-color':record.winOrder.logisticsStatus==2}">确认收货</p>
+                    <button class="status-button button main-color" ng-show="record.winOrder.logisticsStatus==2" ng-click="showConfirm()">确认收货</button>
+                    <p class="status-time black666-text" ng-hide="record.winOrder.logisticsStatus<3">{{record.winOrder.confirmReceivingTime}}</p>
+                </li>
+                <li class="item">
+                    <p class="status-text" ng-class="{'green-color':record.winOrder.logisticsStatus==3}">已签收</p>
+                </li>
+            </div>
+        </div>
+        <div class="profile-winDetail-logistics" ng-show="record.winOrder.logisticsStatus>=2">
+            <div class="profile-winDetail-title">
+                <h3>物流信息</h3>
+            </div>
+            <div class="detail">
+                <p class="productTitle">{{record.winOrder.title}}</p>
+                <p class="logisticsCompany">物流公司：<span>{{record.winOrder.logisticsCompany}}</span></p>
+                <p class="logisticsNumber">运单号码：<span>{{record.winOrder.expressTradeId}}</span></p>
+            </div>
+
+        </div>
+        <div class="profile-winDetail-address" ng-hide="record.winOrder.logisticsStatus==0">
+            <div class="profile-winDetail-title">
+                <h3>地址信息</h3>
+            </div>
+            <div class="detail">
+                <div class="top">
+                    <p class="name">{{record.address.receiver}}</p>
+                    <p class="phoneNumber">{{record.address.phoneNumber}}</p>
+                </div>
+                <div class="clearfloat"></div>
+                <p class="address">{{record.address.province}}{{record.address.city}}{{record.address.area}}{{record.address.street}}</p>
+            </div>
+        </div>
+
+        <div class="profile-winDetail-winOrder">
+            <div class="profile-winDetail-title">
+                <h3>商品信息</h3>
+            </div>
+            <div class="detail">
+                <img ng-src="{{record.winOrder.thumbnailUrl}}" alt="">
+                <p class="title">{{record.winOrder.title}}</p>
+                <p class="term">期号：{{record.winOrder.term}}</p>
+                <p class="price">总需：<span class="blue-text">{{record.winOrder.price}}</span>人次</p>
+                <p class="result">幸运号码：<span class="main-color">{{record.winOrder.result}}</span></p>
+                <p class="count">本期参与：<span class="main-color">{{record.winOrder.count}}</span>人次</p>
+                <p class="createdTime">揭晓时间：{{record.winOrder.endTime}}</p>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

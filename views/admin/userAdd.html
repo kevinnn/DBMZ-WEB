@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<script src="/public/js/jquery/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/public/webuploader/webuploader.css">
+<script type="text/javascript" src="/public/webuploader/webuploader.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+</script>
+<style>
+table th{ border-bottom:1px solid #eee; font-size:12px; font-weight:100; text-align:right; width:200px;}
+table td{ padding-left:10px;}
+input.button{ display:inline-block}
+.myhide {display: none;}
+</style>
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">添加会员</h3></div>
+<div class="bk10"></div>
+<div class="table_form lr10">
+<!--start-->
+  <table width="100%" cellspacing="0">
+  	 <tr>
+			<td width="120" align="right">昵称：</td>
+			<td><input type="text" id="userName" value="" class="input-text"></td>
+		</tr>
+		<tr>
+			<td width="120" align="right">手机：</td>
+			<td><input type="text" id="phoneNumber" value="" class="input-text"><span style="color: red;" class="myhide" id="error"></span></td>
+		</tr>
+		<tr>
+			<td width="120" align="right">密码：</td>
+			<td><input type="text" id="password" value="" class="input-text">(不填写默认为手机号)</td>
+		</tr>
+		<tr>
+			<td width="120" align="right">账户余额</td>
+			<td><input type="text" id="balance" value="" class="input-text">元</td>
+		</tr>
+		<tr>
+			<td width="120" align="right">备注</td>
+			<td><input type="text" id="remark" value="" class="input-text"></td>
+		</tr>
+		<tr>
+			<td width="120" align="right">积分</td>
+			<td><input type="text" id="credits" value="" class="input-text"></td>
+		</tr>
+		<tr>
+			<td width="120" align="right">头像：</td>
+			<td>
+				<div id="avatorUrlList" class="uploader-list"></div>
+	            <div id="avatorUrlPicker" class="webuploader-container">选择图片</div>
+	            <input style="display: none;" type="text" name="avatorUrl" id="avatorUrl"/>
+			</td>
+		</tr>
+		<tr>
+        	<td width="120" align="right"></td>
+            <td>		
+            <input type="submit" class="button" id="dosubmit" value="提交" >
+            </td>
+		</tr>
+</table>
+</div><!--table-list end-->
+<script type="text/javascript">
+    document.getElementById("phoneNumber").onchange = function () {
+        $("#error").addClass("myhide");
+        document.getElementById("dosubmit").disabled = false;
+    }
+    document.getElementById("dosubmit").onclick = function () {
+        var phoneNumber = $("#phoneNumber").val();
+        if (phoneNumber.length == 11) {
+            $.ajax({
+               url : "/admin/user/isUserExit?phoneNumber="+phoneNumber,
+               type: "GET",
+               success: function (data) {
+                if (data.code == 200) {
+                    $("#error").text("手机已经被注册过了");
+                    $("#error").removeClass("myhide");
+                    document.getElementById("dosubmit").disabled = true;
+                } else if (data.code == 404) {
+                    var userName = $("#userName").val();
+                    var password = $("#password").val();
+                    if (password.length == 0) {
+                        password = phoneNumber;
+                    }
+                    var balance = $("#balance").val();
+                    var remark = $("#remark").val();
+                    var credits = $("#credits").val();
+                    var avatorUrl = $("#avatorUrl").val();
+                    $.ajax({
+                        url : "/admin/user/addUser",
+                        type: "POST",
+                        data: {
+                            userName : userName,
+                            phoneNumber : phoneNumber,
+                            password: password,
+                            balance : balance,
+                            remark: remark,
+                            credits: credits,
+                            avatorUrl : avatorUrl
+                        },
+                        success: function (data) {
+                            if (data.code == 200) {
+                                location.href = "/views/admin/userList.html";
+                            }
+                        }
+                    })
+                }
+               }
+            })
+        } else {
+            $("#error").text("手机格式错误");
+            $("#error").removeClass("myhide");
+        }
+    }
+//展示图上传
+jQuery(function() {
+    var $ = jQuery,
+        $avatorUrlList = $('#avatorUrlList'),
+        // 优化retina, 在retina下这个值是2
+        ratio = window.devicePixelRatio || 1,
+
+        // 缩略图大小
+        thumbnailWidth = 100 * ratio,
+        thumbnailHeight = 100 * ratio,
+
+        // Web Uploader实例
+        uploader;
+
+    // 初始化Web Uploader
+    uploader = WebUploader.create({
+
+        // 自动上传。
+        auto: true,
+
+        // swf文件路径
+        swf: '/public/webuploader/Uploader.swf',
+
+        // 文件接收服务端。
+        server: '/uploader/user/avatorUrl',
+
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#avatorUrlPicker',
+
+        // 只允许选择文件，可选。
+        accept: {
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/*'
+        }
+    });
+
+    // 当有文件添加进来的时候
+    uploader.on( 'fileQueued', function( file ) {
+        var $li = $(
+                '<div id="' + file.id + '" class="file-item thumbnail">' +
+                    '<img>' +
+                    '<div class="info">' + file.name + '</div>' +
+                '</div>'
+                ),
+            $img = $li.find('img');
+
+        $avatorUrlList.html( $li );
+
+        // 创建缩略图
+        uploader.makeThumb( file, function( error, src ) {
+            if ( error ) {
+                $img.replaceWith('<span>不能预览</span>');
+                return;
+            }
+
+            $img.attr( 'src', src );
+        }, thumbnailWidth, thumbnailHeight );
+    });
+
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on( 'uploadProgress', function( file, percentage ) {
+        var $li = $( '#'+file.id ),
+            $percent = $li.find('.progress span');
+
+        // 避免重复创建
+        if ( !$percent.length ) {
+            $percent = $('<p class="progress"><span></span></p>')
+                    .appendTo( $li )
+                    .find('span');
+        }
+
+        $percent.css( 'width', percentage * 100 + '%' );
+    });
+
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader.on( 'uploadSuccess', function( file, response ) {
+        if (response.code == 200) {
+            $('#avatorUrl').val(response.data);
+        }
+        $( '#'+file.id ).addClass('upload-state-done');
+    });
+
+    // 文件上传失败，现实上传出错。
+    uploader.on( 'uploadError', function( file ) {
+        var $li = $( '#'+file.id ),
+            $error = $li.find('div.error');
+
+        // 避免重复创建
+        if ( !$error.length ) {
+            $error = $('<div class="error"></div>').appendTo( $li );
+        }
+
+        $error.text('上传失败');
+    });
+
+    // 完成上传完了，成功或者失败，先删除进度条。
+    uploader.on( 'uploadComplete', function( file ) {
+        $( '#'+file.id ).find('.progress').remove();
+    });
+});
+</script>
+</body>
+</html> 

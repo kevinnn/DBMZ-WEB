@@ -1,0 +1,33 @@
+<ion-view view-title="余额明细" class="banlance-page" cache-view=false>
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y="false">
+		<ion-refresher pulling-text="下拉刷新.." on-refresh="doRefresh()"></ion-refresher>
+		<div class="nullRecord" ng-show="init && records.length==0">
+			<img src="/public/img/mobile/null-record@2x.png"/>
+		</div>
+		<ul class="list">
+			<li class="record" ng-repeat="record in records track by $index">
+
+				<p class="method" ng-show="record.type==0">积分兑换</p>
+				<p class="method" ng-show="record.type==1">充值</p>
+				<p class="method" ng-show="record.type==2">未参与成功转入余额</p>
+				<p class="method" ng-show="record.type==3">余额支付</p>
+				<p class="method" ng-show="record.type==4">重复支付转入余额</p>
+				<p class="method" ng-show="record.type==5">新用户红包</p>
+				<p class="method" ng-show="record.type==6">邀请新用户回馈红包</p>
+				<p class="method" ng-show="record.type==7">余额不足，支付失败</p>
+
+				<p class="amount pay" ng-show="record.type==3">- {{(record.amount-0).toFixed(2)}}</p>
+				<p class="amount income" ng-hide="record.type==3">+ {{(record.amount-0).toFixed(2)}}</p>
+
+				<p class="time">{{record.time}}</p>
+			</li>
+		</ul>
+		<ion-infinite-scroll ng-if="init && records.length > 0 && hasMoreData" on-infinite="getBalance()" distance="2%" immediate-check=false></ion-infinite-scroll>
+	</ion-content>
+	
+</ion-view>

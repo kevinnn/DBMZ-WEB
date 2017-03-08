@@ -1,0 +1,30 @@
+<ion-view view-title="余额充值" class="recharge-page" cache-view=false>
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y="false">
+		<div class="recharge">
+			<div class="chooseNum">
+				<p>选择充值金额</p>
+				<div class="account" ng-repeat="index in [] | range:recharge_list.length" ng-class="{chosen:current_select===index}" ng-click="select(index)">{{recharge_list[index]}}</div>
+				<div class="account" ng-class="{chosen:current_select===5}" ng-click="select(5)">
+					<input placeholder="其他金额" class="inputNum" pattern="\d*" type="text" name="tmp.input_number" ng-model="tmp.input_number" ng-change="checkNumber(tmp.input_number)">
+				</div>
+			</div>
+
+			<div class="choosePay">
+				<p class="tip">推荐支付方式</p>
+				<div class="payment clearfix">
+					<img class="img-left" src="/public/img/mobile/pay-wechat@2x.png"/>
+					<p>微信支付</p>
+					<p class="payDetail">推荐安装微信5.0及以上版本的使用</p>
+					<img class="img-right" src="/public/img/mobile/btn-checked@2x.png"/>
+				</div>
+			</div>
+			<div class="confirm" ng-click="pay()">确认支付<span class="big">￥{{recharge_number}}</span></div>
+		</div>
+	</ion-content>
+	
+</ion-view>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    function updateIsApproved() {
+		var isApproved = $("#isApproved").val();
+        var id = getQueryString("showId");
+		$.ajax({
+			url: '/admin/show/setIsApproved',
+			type: "POST",
+			data: {
+				id:id,
+				isApproved: isApproved,
+			},
+			success: function (data) {
+				console.log(data);
+				if (data.code == 200) {
+					location.reload();
+				} else {
+
+				}
+			},
+			error: function (data) {
+				console.log(data);
+			}
+		})
+	}
+    $.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+</script>
+<link rel="stylesheet" type="text/css" href="/public/webuploader/webuploader.css">
+<script type="text/javascript" src="/public/webuploader/webuploader.js"></script>
+<style>
+table th{ border-bottom:1px solid #eee; font-size:12px; font-weight:100; text-align:right; width:200px;}
+table td{ padding-left:10px;}
+input.button{ display:inline-block}
+</style>
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">查看晒单</h3></div>
+<div class="bk10"></div>
+<div class="table_form lr10">
+<!--start-->
+  <table width="100%" cellspacing="0">
+	<tr>
+    	<td width="120" align="right">标题:</td>
+        <td>
+	        <div id="showTitle"></div>       
+        </td>
+    </tr>
+    <tr>
+        <td width="120" align="right">内容:</td>
+        <td>
+            <div id="showContent"></div>
+        </td>
+    </tr>
+	<tr>
+		<td width="120" align="right">图片:</td>
+		<td>
+			<div id="showImages"></div>
+		</td>
+	</tr>
+    <tr>
+		<td width="120" align="right">批准:</td>
+		<td>
+			<select id='isApproved'>
+                <option value=0>否</option>
+                <option value=1>是</option>
+            </select>
+		</td>
+	</tr>
+    <tr>
+        <td></td>
+        <td>
+            <input type='submit' class='button' value='  提交  ' onclick='updateIsApproved()'>
+        </td>
+    </tr>
+</table>
+</div><!--table-list end-->
+
+<script>
+function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+}
+$(document).ready(function () {
+    $.ajax({
+      url : "/admin/show/getShowInfo"+location.search,
+      type: "GET",
+      success: function (data) {
+        if (data.code == 200) {
+            var arr = data.data;
+            
+            var img = "";
+            var imgList = arr[0].imgUrls.split(',');
+            var i;
+            for (i = 0; i < imgList.length; i++) {
+                img += "<br><img weigh='800' src='"+imgList[i]+"'/></br>";
+            }
+            if (arr.length > 0) {
+                $("#isApproved").val(arr[0].isApproved); 
+                $("#showTitle").html('<div >' +
+                    arr[0].title +
+                '</div>')
+                $("#showContent").html('<div >' +
+                    arr[0].content +
+                '</div>')                
+                $("#showImages").html('<div>' +
+                     img+
+                '</div>')
+
+
+            }
+        }
+      }  
+    })
+
+});
+
+</script>
+</body>
+</html> 

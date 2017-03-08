@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">会员列表</h3></div>
+<div class="bk10"></div>
+
+<div class="table-list lr10">        
+  <!--start-->
+  <table width="100%" cellspacing="0">
+    <thead>
+		<tr>
+            <th align='center'>代理ID</th>
+            <th align='center'>代理用户名</th>
+            <th align='center'>总会员数</th>
+            <th align='center'>钱包</th>
+			<th align='center'>返佣比例</th>	
+			<th align='center'>当月新注册</th> 
+			<th align='center'>当月流水</th>					
+		</tr>
+    </thead>
+    <tbody id="tbody">
+		
+  	</tbody>
+</table>
+</div><!--table-list end-->
+
+<div id="pages" style="margin:10px 10px">		
+	<ul>
+		<li id="totalPage"></li>
+		<li><a id='Page_Prev' href="javascript:void(0);">上一页</a></li>
+		<li><a id='Page_Next' href="javascript:void(0);">下一页</a></li>
+		<li><a id='Page_One' href="javascript:void(0);">首页</a></li>
+		<li><a id='Page_End' href="javascript:void(0);">尾页</a></li>
+	</ul>
+</div>
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+	function deleteUser (id) {
+		if (confirm("是否删除")) {
+			$.ajax({
+				url: "/admin/user/deleteUser",
+				type: "POST",
+				data: {
+					id : id
+				},
+				success: function (data) {
+					if (data.code == 200) {
+						location.reload();
+					}
+				}
+			})
+		}
+	}
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return unescape(r[2]); return null;
+	}
+	$(document).ready(function () {
+		$.ajax({
+			url : "/admin/delegate/getDelegateList"+location.search,
+			type: "GET",
+			success: function (data) {
+				console.log(data);
+				if (data.code == 200) {
+					var arr = data.data.delegates;
+					var delegateRate = data.data.rate;
+					var str = "";
+					for (var i = 0; i < arr.length; i++) {
+						str += "<tr>"+
+								"<td align='center'>"+arr[i].id+"</td>"+
+								
+								"<td align='center'>"+
+									"<a href='/views/admin/cashList.html?page=1&delegateid="+arr[i].id+"'>"+arr[i].userName+"</a>"+
+								"</td>"+						
+								"<td align='center'>"+arr[i].memberNum+"</td>"+								
+								"<td align='center'>"+arr[i].cash+"</td>"+								
+								"<td align='center'>"+delegateRate+"\%"+"</td>"+
+								"<td align='center'>"+arr[i].monthRegister+"</td>"+
+								"<td align='center'>"+(arr[i].monthCash?arr[i].monthCash:0)+"</td>	"+							
+							"</tr>";
+					}
+					$("#tbody").html(str);
+				}
+			}
+		});
+
+		$.ajax({
+			url : "/admin/delegate/getDelegateCount",
+			type: "GET",
+			success: function (data) {
+				if (data.code == 200) {
+					var count = data.data;
+					$("#totalPage").text("共 "+count+" 条");
+					document.getElementById("Page_One").href = "/views/admin/userList.html?page=1";
+					var page = getQueryString("page");
+					if (page > 1) {
+						document.getElementById("Page_Prev").href = "/views/admin/userList.html?page="+(page-1);
+					}
+					var end = parseInt(page/20)+(page%20 == 0 ? 0 : 1);
+					document.getElementById("Page_End").href = "/views/admin/userList.html?page="+end;
+					if (page*20 < count) {
+						document.getElementById("Page_Next").href = "/views/admin/userList.html?page="+(parseInt(page)+1);
+					}
+				}
+			}
+		})
+	})
+</script>
+</body>
+</html> 

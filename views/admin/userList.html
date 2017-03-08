@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">会员列表</h3></div>
+<div class="bk10"></div>
+
+<div class="table-list lr10">        
+  <!--start-->
+  <table width="100%" cellspacing="0">
+    <thead>
+		<tr>
+            <th align='center'>ID</th>
+            <th align='center'>用户类型</th>
+            <th align='center'>用户名</th>
+            <th align='center'>手机</th>
+            <th align='center'>账户余额</th>
+			<th align='center'>积分</th> 
+			<th align='center'>备注</th>
+			<th align='center'>登陆时间,地址,IP</th>			
+			<th align='center'>注册时间</th>		
+			<th align='center'>是否代理</th>	
+			<th align='center'>邀请码</th>
+            <th align='center'>管理</th>
+		</tr>
+    </thead>
+    <tbody id="tbody">
+		
+  	</tbody>
+</table>
+</div><!--table-list end-->
+
+<div id="pages" style="margin:10px 10px">		
+	<ul>
+		<li id="totalPage"></li>
+		<li><a id='Page_Prev' href="javascript:void(0);">上一页</a></li>
+		<li><a id='Page_Next' href="javascript:void(0);">下一页</a></li>
+		<li><a id='Page_One' href="javascript:void(0);">首页</a></li>
+		<li><a id='Page_End' href="javascript:void(0);">尾页</a></li>
+	</ul>
+</div>
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+	function deleteUser (id) {
+		if (confirm("是否删除")) {
+			$.ajax({
+				url: "/admin/user/deleteUser",
+				type: "POST",
+				data: {
+					id : id
+				},
+				success: function (data) {
+					if (data.code == 200) {
+						location.reload();
+					}
+				}
+			})
+		}
+	}
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return unescape(r[2]); return null;
+	}
+	$(document).ready(function () {
+		$.ajax({
+			url : "/admin/user/userList"+location.search,
+			type: "GET",
+			success: function (data) {
+				console.log(data);
+				if (data.code == 200) {
+					var arr = data.data;
+					var str = "";
+					for (var i = 0; i < arr.length; i++) {
+						str += "<tr>"+
+								"<td align='center'>"+arr[i].id+"</td>"+
+								"<td align='center'>"+(arr[i].type == 1 ? "手机" : (arr[i].type == 2 ? "微信" : "QQ"))+"</td>"+
+								"<td align='center'>"+arr[i].userName+"</td>"+
+								"<td align='center'>"+arr[i].phoneNumber+"</td>"+
+								"<td align='center'>"+arr[i].balance+"</td>"+
+								"<td align='center'>"+arr[i].credits+"</td>"+
+								"<td align='center'>"+(arr[i].remark == null ? "无" : arr[i].remark)+"</td>	"+
+								"<td align='center'>"+(arr[i].loginTime == null ? "未登录" : (arr[i].loginTime+","+(arr[i].loginArea==null ? "" : arr[i].loginArea)+","+(arr[i].ip == null ? "" : arr[i].ip)))+"</td>"+
+								"<td align='center'>"+(arr[i].registerTime == null ? "" : arr[i].registerTime)+"</td>"+
+								"<td align='center'>"+(arr[i].isDelegate == 0 ? "否" : "是")+"</td>"+
+								"<td align='center'>"+(arr[i].code == null ? "无" : arr[i].code)+"</td>"+
+								"<td align='center'>"+
+									"[<a href='/views/admin/userEdit.html?id="+arr[i].id+"'>修改</a>]"+
+									"[<a href='javascript:void(0);' onclick='deleteUser("+arr[i].id+")'>删除</a>]"+
+							   "</td>"+
+							"</tr>";
+					}
+					$("#tbody").html(str);
+				}
+			}
+		});
+
+		$.ajax({
+			url : "/admin/user/userCount",
+			type: "GET",
+			success: function (data) {
+				if (data.code == 200) {
+					var count = data.data;
+					$("#totalPage").text("共 "+count+" 条");
+					document.getElementById("Page_One").href = "/views/admin/userList.html?page=1";
+					var page = getQueryString("page");
+					if (page > 1) {
+						document.getElementById("Page_Prev").href = "/views/admin/userList.html?page="+(page-1);
+					}
+					var end = parseInt(page/20)+(page%20 == 0 ? 0 : 1);
+					document.getElementById("Page_End").href = "/views/admin/userList.html?page="+end;
+					if (page*20 < count) {
+						document.getElementById("Page_Next").href = "/views/admin/userList.html?page="+(parseInt(page)+1);
+					}
+				}
+			}
+		})
+	})
+</script>
+</body>
+</html> 

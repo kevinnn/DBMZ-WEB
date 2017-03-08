@@ -1,0 +1,25 @@
+<ion-view view-title="充值结果" class="payresult-page" cache-view=false>
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content>
+		
+		<div class="pay-result hide" ng-class="{'show':init}">
+			<p class="result-title" ng-show="isPay==1"><span class="result-icon success"></span>充值成功！</p>
+			<p class="result-title yellow-color" ng-show="isPay==0"><span class="result-icon failed"></span>充值失败</p>
+			
+			<div class="buttons" ng-show="isPay==1">
+				<button class="custom-button keep-on" ng-click="backToIndex()">继续夺宝</button>
+				<button class="custom-button check-record" ng-click="backToProfile()">查看余额</button>
+			</div>
+			<div class="buttons" ng-show="isPay==0">
+				<button class="custom-button keep-on" ng-click="backToIndex()">继续夺宝</button>
+				<button class="custom-button check-record" ng-click="repay()">重新充值</button>
+			</div>
+		</div>
+
+	</ion-content>
+	
+</ion-view>

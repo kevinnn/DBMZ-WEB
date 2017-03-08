@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<style type="text/css">
+tr{height:40px;line-height:40px}
+.dingdan_content{width:650px;border:1px solid #d5dfe8;background:#eef3f7;float:left; padding:20px;}
+.dingdan_content li{ float:left;width:310px;}
+.dingdan_content_user{width:650px;border:1px solid #d5dfe8;background:#eef3f7;float:left; padding:20px;}
+.dingdan_content_user li{ line-height:25px;}
+
+.api_b{width:80px; display:inline-block;font-weight:normal}
+.yun_ma{ word-break:break-all; width:200px; background:#fff; overflow:auto; height:100px; border:5px solid #09F; padding:5px;}
+</style>
+</head>
+<body marginwidth="0" marginheight="0">
+<div class="header-title lr10">
+	<b>订单详情</b>
+</div>
+<div class="bk10"></div>
+<div class="table-list lr10" id="content">
+<!--start-->
+		<div class="dingdan_content">
+			<h3 style="clear:both;display:block; line-height:30px;" id="title"></h3>			
+			<li id="remain"></li>		
+			<li id="price"></li>		
+			<li id="term"></li>
+			<li id="A"></li>
+			<li id="B"></li>
+			<li id="result"></li>
+			<li id="orderId"></li>
+			<li id="createdTime"></li>
+			<li id="startTime"></li>
+			<div class="bk10"></div>
+		</div>
+		<div class="bk10"></div>
+</div><!--table-list end-->
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script>
+	$.ajax({
+		'url': '/admin/admin/isLogin',
+		'type': 'GET',
+		'async': false,
+		success: function (data) {
+			if (data.code != 200) {
+				window.location.href = '/admin/login.html';
+			}
+		}
+	});
+	window.onload = function () {
+		$.ajax({
+			url: "/admin/yungou/yungouDetail"+location.search,
+			type: "GET",
+			success: function (data) {
+				console.log(data);
+				if (data.code == 200) {
+					var obj = data.data;
+					$("#title").text(obj[0].title);
+					$("#remain").html("<b class='api_b'>剩余次数：</b>"+(obj[0].price-obj[0].saleCount)+" 人次");
+					$("#price").html("<b class='api_b'>总需次数：</b>"+obj[0].price+"人次");
+					$("#term").html("<b class='api_b'>商品期数：</b>第 "+obj[0].term+" 期");
+					$("#A").html("<b class='api_b'>A值：</b>"+(obj[0].A ? obj[0].A : "未开奖"));
+					$("#B").html("<b class='api_b'>B值：</b>"+(obj[0].B ? obj[0].B : "未开奖"));
+					$("#result").html("<b class='api_b'><font color='#ff0000'>中奖幸运码：</font></b>"+(obj[0].result ? obj[0].result : "未开奖"));
+					$("#orderId").html("<b class='api_b'>中奖订单：</b> "+(obj[0].orderId ? ("<a href='/views/admin/orderDetail.html?id="+obj[0].orderId+"'>"+obj[0].orderId+"</a>") : "未开奖"));
+					$("#createdTime").html("<b class='api_b'>创建时间：</b>"+obj[0].createdTime);
+					$("#startTime").html("<b class='api_b'>揭奖时间：</b>"+(obj[0].startTime ? obj[0].startTime : "未开奖"));
+				}
+			}
+		})
+	}
+</script>
+
+ </body></html>

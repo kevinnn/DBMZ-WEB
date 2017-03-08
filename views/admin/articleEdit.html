@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台首页</title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/calendar-blue.css" type="text/css"> 
+<script type="text/javascript" charset="utf-8" src="/public/js/admin/calendar.js"></script>
+<script src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+</script>
+<style>
+	.bg{background:#fff url(http://fwy-zsb.yygcms.com/data/plugin/style/global/image/ruler.gif) repeat-x scroll 0 9px }
+</style>
+</head>
+<body>
+<div class="header-title lr10">
+	    <b>添加文章</b>
+</div>
+<div class="bk10"></div>
+<div class="table_form lr10">
+	<table width="100%"  cellspacing="0" cellpadding="0">
+		<tr>
+			<td align="right" width="120"><font color="red">*</font>所属分类：</td>
+			<td>            
+				<input  type="text" id="category" class="input-text wid100">  	
+            </td>
+		</tr>        
+		<tr>
+			<td align="right"><font color="red">*</font>文章标题：</td>
+			<td><input  type="text" id="title"  class="input-text wid400"></td>
+		</tr>
+        <tr>
+			<td align="right">关键字：</td>
+			<td><input type="text" id="keywords"  class="input-text wid400">
+            <span>多个关键字请用   ,  号分割开</span>
+            </td>
+		</tr>
+		<tr>
+			<td height="300"  align="right"><font color="red">*</font>内容详情：</td>
+			<td style="max-width: 1000px;">
+                <script name="content" id="myeditor" type="text/plain"></script>
+                <script type="text/javascript" src="/public/ueditor/ueditor.config.js"></script>
+                <script type="text/javascript" src="/public/ueditor/ueditor.all.js"></script>
+                <script type="text/javascript">
+                    //实例化编辑器
+                    var ue = UE.getEditor('myeditor');
+
+                    ue.addListener('ready',function(){
+                        this.focus();
+                    });
+                </script>
+                <style>
+                .content_attr {
+                    border: 1px solid #CCC;
+                    padding: 5px 8px;
+                    background: #FFC;
+                    margin-top: 6px;
+                    width:915px;
+                }
+                </style>
+            </td>
+		</tr>        
+        <tr height="60px">
+			<td align="right"></td>
+			<td><input type="submit" id="dosubmit" class="button" value="修改文章" disabled="true" /></td>
+		</tr>
+	</table>
+</div>
+<script type="text/javascript">
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return unescape(r[2]); return null;
+	}
+	$(document).ready(function () {
+		
+		document.getElementById("dosubmit").onclick = function (event) {
+			event.target.value = "修改中";
+			event.target.disabled = true;
+			var id = getQueryString("id");
+			var category = document.getElementById("category").value;
+			var title = document.getElementById("title").value;
+			var keywords = document.getElementById("keywords").value;
+			var content = UE.getEditor('myeditor').getContent();
+			$.ajax({
+				url: "/admin/article/updateArticle",
+				type: "POST",
+				data: {
+					id : id,
+					category: category,
+					title : title,
+					keywords : keywords,
+					content : content
+				},
+				success: function (data) {
+					if (data.code == 200) {
+						location.href = "/views/admin/articleList.html";
+					}
+				}
+			});
+		}
+	});
+	ue.addListener('ready',function(){
+		$.ajax({
+			url : "/admin/article/articleEdit"+location.search,
+			type : "GET",
+			success: function (data) {
+				if (data.code == 200) {
+					var obj = data.data;
+					document.getElementById("category").value = obj[0].category;
+					document.getElementById("title").value = obj[0].title;
+					document.getElementById("keywords").value = obj[0].keywords;
+					UE.getEditor('myeditor').setContent(obj[0].content);
+					document.getElementById("dosubmit").disabled = false;
+				}
+			}
+		});
+	});
+
+</script>
+</body>
+</html> 

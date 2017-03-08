@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台首页</title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/calendar-blue.css" type="text/css"> 
+<script type="text/javascript" charset="utf-8" src="/public/js/admin/calendar.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+</script>
+<style>
+body{ background-color:#fff}
+.table-list  tr {
+	text-align:center;
+}
+
+</style>
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">文章管理</h3></div>
+<div class="bk10"></div>
+<div class="table-list lr10">
+	<table width="100%" cellspacing="0">
+     	<thead>
+        		<tr>
+					<th>ID</th>  
+					<th>所属栏目</th>  
+                    <th>文章标题</th>
+                    <th>添加时间</th>        
+                    <th>管理</th>
+				</tr>
+        </thead>
+        <tbody id="tbody">				
+        </tbody>
+    </table>
+</div>
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url : "/admin/article/articleList",
+            type: "GET",
+            success: function (data) {
+                console.log(1);
+                if (data.code == 200) {
+                    var arr = data.data;
+                    var str = "";
+                    for (var i = 0; i < arr.length; i++) {
+                        str += "<tr>"+
+                                    "<td>"+arr[i].id+"</td>"+
+                                    "<td>"+arr[i].category+"</td>"+
+                                    "<td>"+arr[i].title+"</td>"+
+                                    "<td>"+arr[i].createdTime+"</td>"+
+                                    "<td class='action'>"+
+                                        "<a href='/views/admin/articleEdit.html?id="+arr[i].id+"'>修改</a>"+
+                                        "<span class='span_fenge lr5'>|</span>"+
+                                        "<a href='' onclick='articleDelete("+arr[i].id+")'>删除</a>"+
+                                    "</td>"+
+                                "</tr>";
+                    }
+                    $("#tbody").html(str);
+                }
+            }
+        })
+    });
+    function articleDelete(id) {
+        $.ajax({
+            url: "/admin/article/deleteArticle",
+            type: "POST",
+            data: {
+                id:id
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    location.reload();
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html>

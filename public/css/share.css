@@ -1,0 +1,128 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+}
+body {
+  position: relative;
+}
+.share {
+    position: fixed;
+    background-image: url("/public/img/mobile/share.png");
+    opacity: 0.8;
+    filter:Alpha(opacity=80);
+    width: 100%;
+    height: 100%;
+    z-index: 10000;
+    background-size: cover;
+    background-position: 50% -20px;
+    display: none;
+}
+.share-new-page {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #EEEEEE;
+  overflow: hidden;
+}
+.share-new-page .share-new {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  position: relative;
+  text-align: middle; }
+  .share-new-page .share-new img {
+    width: 100%;
+    height: auto;
+    display: block;
+    vertical-align: middle;
+    -webkit-user-drag: none; }
+  .share-new-page .share-new .avatar-wrap {
+    position: absolute;
+    top: 12%;
+    width: 100%;
+    text-align: center; }
+    .share-new-page .share-new .avatar-wrap .avatar {
+      position: relative;
+      z-index: 99; }
+      .share-new-page .share-new .avatar-wrap .avatar img {
+        display: inline-block;
+        width: 75px;
+        height: 75px;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%; }
+    .share-new-page .share-new .avatar-wrap .nickname {
+      margin-top: 16px;
+      font-family: PingFangSC-Regular;
+      font-size: 17px;
+      color: #EEEEEE;
+      line-height: 17px; }
+  .share-new-page .share-new a {
+    height: 20%;
+    top: 50%;
+    width: 40%;
+    display: block;
+    position: absolute;
+    z-index: 3;
+    left: 30%;
+    text-decoration: none;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0; }
+
+.share-old-page {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #EEEEEE;
+  overflow: hidden; }
+.share-old-page .share-old {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+  position: relative;
+  text-align: middle; }
+  .share-old-page .share-old img {
+    width: 100%;
+    height: auto;
+    display: block;
+    vertical-align: middle;
+    -webkit-user-drag: none; }
+  .share-old-page .share-old .avatar-wrap {
+    position: absolute;
+    top: 14%;
+    width: 100%;
+    text-align: center; }
+    .share-old-page .share-old .avatar-wrap .avatar {
+      position: relative;
+      z-index: 99; }
+      .share-old-page .share-old .avatar-wrap .avatar img {
+        display: inline-block;
+        width: 75px;
+        height: 75px;
+        -moz-border-radius: 50%;
+        -webkit-border-radius: 50%;
+        border-radius: 50%; }
+  .share-old-page .share-old a {
+    height: 10%;
+    top: 64%;
+    width: 60%;
+    display: block;
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    margin-left: -30%;
+    text-decoration: none;
+    -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: 0; }

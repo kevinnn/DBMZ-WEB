@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+ <style>
+ 	th{ border:0px solid #000;}
+ </style>
+ 
+</head>
+<body>
+<div class="header lr10">
+	<a href="/views/admin/category.html">所有分类</a><span class="span_fenge lr5">|</span><a href="/views/admin/categoryAdd.html">添加分类</a></div>
+
+<div class="bk10"></div>
+<div class="table-list lr10">
+    <table width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th align='center'>ID</th>
+                <th align='center'>分类名称</th>
+    			<th align='center'>管理操作</th>
+            </tr>
+        </thead>
+        <tbody id="tbody">
+        </tbody>
+    </table>
+</div><!--table-list end-->
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        url:'/admin/admin/isLogin',
+        type:'GET',
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = '/admin/login.html';
+            }
+        }
+    })
+</script>
+<script>
+    $.ajax({
+        url: '/admin/category/categoryList',
+        type: 'GET',
+        success: function (data) {
+            console.log(data);
+            if (data.code == 200) {
+                var obj = data.data;
+                str = "";
+                for (var i = 0; i < obj.length; i++) {
+                    str += "<tr>"+
+                                "<td align='center'>"+obj[i]['id']+"</td>"+
+                                "<td align='center'>"+obj[i]['name']+"</td>"+
+                                "<td align='center'><a href='/views/admin/categoryEdit.html?id="+obj[i]['id']+"'>修改</a><span class='span_fenge lr5'>|</span><a href='javascript:void(0)' onclick='deleteCategory("+obj[i]['id']+")'>删除</a></td>"+
+                            "</tr>";
+                }
+                $('#tbody').html(str);
+            }
+        }
+    })
+    function deleteCategory(id) {
+        $.ajax({
+            url : '/admin/category/deleteCategory',
+            type: 'POST',
+            data: {
+                id : id
+            },
+            success: function (data) {
+                location.reload();
+            }
+        })
+    }
+</script>
+</body>
+</html> 

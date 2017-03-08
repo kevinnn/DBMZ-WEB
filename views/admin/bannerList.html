@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<style>
+tbody tr{ line-height:30px; height:30px;}
+</style>
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">幻灯管理</h3></div>
+<div class="bk10"></div>
+<div class="table-list lr10">
+<!--start-->
+  <table width="100%" cellspacing="0">
+    <thead>
+		<tr>
+		<th align="center">id</th>
+        <th align="center">幻灯图片(web端)</th>
+		<th align="center">幻灯图片(手机端)</th>
+		<th align="center">幻灯点击后的链接</th>
+		<th align="center">显示/隐藏</th>
+		<th align="center">操作</th>
+		</tr>
+    </thead>
+    <tbody id="tbody">
+  	</tbody>
+</table>
+	<div class="btn_paixu"></div>
+</div><!--table-list end-->
+
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+    $(document).ready(function () {
+    	$.ajax({
+    		url: "/admin/banner/bannerList",
+    		type: "GET",
+    		success: function (data) {
+    			console.log(data);
+    			if (data.code == 200) {
+    				var arr = data.data;
+    				var str = "";
+    				for (var i = 0; i < arr.length; i++) {
+    					str += "<tr>"+
+    								"<td align='center'>"+arr[i].id+"</td>"+
+    								"<td align='center'><img height='50px' src='"+arr[i].imgUrl+"'/></td>"+
+                                    "<td align='center'><img height='50px' src='"+arr[i].mobileImgUrl+"'/></td>"+
+    								"<td align='center'><a href='"+arr[i].url+"' target='_blank'>"+arr[i].url+"</a></td>"+
+    								"<td align='center'>"+(arr[i].isOn==1 ? "显示" : "隐藏")+"</td>"+
+    								"<td align='center'>"+
+    									"<a href='/views/admin/bannerEdit.html?id="+arr[i].id+"'>修改</a>"+
+    									"<span> | </span>"+
+    									"<a href='javascript:void(0);' onclick='deleteBanner("+arr[i].id+")'>删除</a>"+
+    								"</td>"+
+    							"<tr>";
+    				}
+    				document.getElementById("tbody").innerHTML = (str);
+    			}
+    		}
+    	});
+    });
+    function deleteBanner(id) {
+    	$.ajax({
+    		url: "/admin/banner/deleteBanner",
+    		type: "POST",
+    		data: {
+    			id : id
+    		},
+    		success: function (data) {
+    			if (data.code == 200) {
+    				location.reload();
+    			}
+    		}
+    	})
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<ion-view view-title="{{viewTitle}}" class="profile-addressEdit-page has-tabs-top">
+
+    <ion-nav-bar class="bar-stable has-tabs-top">
+        <ion-nav-back-button></ion-nav-back-button>
+        <ion-nav-buttons side="right">
+            <button class="button button-clear buttons header-item" ng-click="deleteAddress()" ng-bind="deleteText"></button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
+    <ion-content scrollbar-y="false">
+        <div class="profile-address-edit">
+            <form name="addressForm" novalidate>
+                <ul class="list">
+                    <li class="item item-toggle set-default">
+                        <label class="toggle toggle-balanced">
+                            <input type="checkbox" ng-model="address.status" ng-true-value="'1'" ng-false-value="'0'">
+                            <div class="track">
+                                <div class="handle"></div>
+                            </div>
+                            <p>设置为默认地址</p>
+                        </label>
+                    </li>
+                    <li class="item receiver">
+                        <label class="item item-input">
+                            <span class="input-label">收 货 人</span>
+                            <input type="text" placeholder="收货人姓名" ng-model="address.receiver" required ng-focus>
+                        </label>
+                    </li>
+                    <li class="item phoneNumber">
+                        <label class="item item-input">
+                            <span class="input-label">手机号码</span>
+                            <input name="phone" ng-model="address.phoneNumber" placeholder="手机号码" pattern="\d*" type="text" ng-pattern="/^(1[3-9]\d{9}$)/" ng-focus required>
+                        </label>
+                    </li>
+                    <li class="item province">
+                        <label class="item item-input item-select">
+                            <span class="input-label">省 份</span>
+                            <select ng-model="address.provinceID" ng-change="selectProvince()" required ng-focus>
+                                <option ng-repeat="province in provinces" value="{{province.provinceID}}" ng-selected="{{address.provinceID == province.provinceID}}">{{province.province}}</option>
+                            </select>
+                        </label>
+                    </li>
+                    <li class="item city" ng-show="address.provinceID" ng-cloak>
+                        <label class="item item-input item-select">
+                            <span class="input-label">城 市</span>
+                            <select ng-model="address.cityID" ng-change="selectCity()" required ng-focus>
+                                <option ng-repeat="city in cities" value="{{city.cityID}}" ng-selected="{{address.cityID == city.cityID}}">{{city.city}}</option>
+                            </select>
+                        </label>
+                    </li>
+                    <li class="item area" ng-show="address.cityID" ng-cloak>
+                        <label class="item item-input item-select">
+                            <span class="input-label">地 区</span>
+                            <select ng-model="address.areaID" required ng-focus>
+                                <option ng-repeat="area in areas" value="{{area.areaID}}" ng-selected="{{address.areaID == area.areaID}}">{{area.area}}</option>
+                            </select>
+                        </label>
+                    </li>
+                    <li class="item address-detail">
+                        <label class="item item-input">
+                            <span class="input-label">详细地址</span>
+                            <textarea maxlength="50" placeholder="输入街道地址" ng-model="address.street" required ng-focus></textarea>
+                        </label>
+                    </li>
+                    <p class="main-color error-msg" ng-show="addressForm.$dirty && addressForm.$invalid" style="">地址信息不完整或格式不正确</p>
+                </ul>
+                <div class="add-address-div">
+                    <button class="button main-color add-address-button" ng-disabled="addressForm.$invalid" ng-click="saveAddress()">保存</button>
+                </div>
+            </form>
+        </div>
+    </ion-content>
+
+</ion-view>

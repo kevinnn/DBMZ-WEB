@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台首页</title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/calendar-blue.css" type="text/css"> 
+<script type="text/javascript" charset="utf-8" src="/public/js/admin/calendar.js"></script>
+<script src="/public/js/jquery/jquery.min.js"></script>
+<style>
+body{ background-color:#fff}
+tr{ text-align:center}
+</style>
+<script type="text/javascript">
+    $.ajax({
+        url:'/admin/admin/isLogin',
+        type:'GET',
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = '/admin/login.html';
+            }
+        }
+    })
+</script>
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">晒单管理</h3>
+    <span class="span_fenge lr10"></span>    
+</div>
+<div class="bk10"></div>
+<form action="#" method="post" name="myform">
+<div class="table-list lr10">
+    <table width="100%" cellspacing="0">
+     	<thead>
+    		<tr>
+                <th align="center">ID</th>        
+                <th align="center">订单号</th>    
+                <th align="center" width="120">用户名</th>
+                <th align="center">商品标题</th>            
+                <th align="center">期数</th>
+                <th align="center">晒单时间</th>
+                <th align="center">晒单标题</th>
+                <th align="center">审核通过</th>
+                <th align="center">管理</th>
+			</tr>
+        </thead>
+        <tbody id="tbody">				
+           
+        </tbody>
+     </table>     
+</div>
+</form>
+	
+	<div id="pages">
+        <ul>
+            <li id="count"></li>
+            <li><a href="javascript:void(0);" id='Page_Prev'>上一页</a></li>
+            <li><a href="javascript:void(0);" id='Page_Next'>下一页</a></li>
+            <li><a href="javascript:void(0);" id='Page_One'>首页</a></li>
+            <li><a href="javascript:void(0);" id='Page_End'>尾页</a></li>
+        </ul>
+    </div>
+</div>
+<script type="text/javascript">
+    function approveShow(id) {
+        if (confirm("是否批准")) {
+            $.ajax({
+                url: "/admin/show/approveShow",
+                type: "POST",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    console.log(data);
+                    if (data.code == 200) {
+                        location.reload();
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            })
+        }
+    }
+
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+    var page = getQueryString('page');
+    page = page == null ? 1 : page;
+    if (page > 1) {
+        document.getElementById('Page_Prev').href = '/views/admin/showList.html?page='+(page-1);
+    }
+    document.getElementById('Page_One').href='/views/admin/showList.html?page=1';
+    $.ajax({
+        url: '/show/getCountAll',
+        type: 'GET',
+        success: function (data) {
+            console.log(data);
+            var count = data.data;
+            var next = document.getElementById('Page_Next');
+            if (page*20 < count) {
+                next.href = '/views/admin/showList.html?page='+(parseInt(page)+1);
+            } else {
+                next.href = 'javascript:void(0)';
+            }
+            var totalPage = 1;
+            if (count % 20 != 0) {
+                totalPage = parseInt(count/20)+1;
+            } else {
+                totalPage = parseInt(count/20);
+            }
+            document.getElementById('Page_End').href = '/views/admin/showList.html?page='+totalPage;
+            $('#count').text("共 "+count+" 条");
+
+        }
+    })
+    $.ajax({
+        url: '/admin/show/showList?page='+page,
+        type: 'GET',
+        success: function (data) {
+            var objArr = data.data;
+            var str = "";
+            var obj,i,j;
+            for (i = 0; i < objArr.length; i++) {
+                // img = "";
+                obj = objArr[i];
+                // for(j=0; j < obj['imgUrls'].length; j++) {
+                //     img += "<img width='80' height='80' src="+obj['imgUrls'][j]+"/>";
+                // }
+                str += "<tr>"+
+                        "<td>"+obj['id']+"</td>"+
+                        "<td>"+obj['orderId']+"</td>"+                          
+                        "<td><span>"+obj['userName']+"<span></td>"+
+                        "<td><span>"+obj['proTitle']+"</span></td>"+                        
+                        "<td>"+obj['term']+"</td>"+
+                        "<td>"+obj['showCreatedTime']+"</td>"+   
+                        "<td><span>"+obj['showTitle']+"</span></td>"+
+                        "<td><span>"+(obj['isApproved'] == 1?"通过":"未通过")+"</span></td>"+                                             
+                        "<td class='action'>"+
+                            "[<a href='/views/admin/viewShow.html?showId="+obj['id']+"'>查看</a>]"+
+                            // (obj['isApproved'] == 1?"[批准]":("[<a href='javascript:void(0);' onclick='approveShow("+obj['id']+")'>批准</a>]"))+
+                        "</td>"+
+                        "</tr>";
+            }
+            $('#tbody').append(str);
+        }
+    });
+</script>
+</body>
+</html> 

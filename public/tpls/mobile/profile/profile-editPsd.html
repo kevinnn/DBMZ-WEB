@@ -1,0 +1,32 @@
+<ion-view view-title="修改密码" class="editPsd-page" cache-view=false>
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y="false">
+		<div class="editPassword">
+			<div class="editForm">
+				<span>旧密码</span>
+				<input placeholder="请输入旧密码" class="content" minlength="6" maxlength="20" type="password" ng-model="form.psw">
+			</div>
+			<div class="editForm">
+				<span>新密码</span>
+				<input placeholder="请输入新密码，6-20个字符" class="content" minlength="6" maxlength="20" type="password" ng-model="form.newPsw">
+			</div>
+			<div class="editForm">
+				<span>确认密码</span>
+				<input placeholder="请再次输入新密码，6-20个字符" class="content" minlength="6" maxlength="20" type="password" ng-model="form.newPsw2">
+			</div>
+			<p class="main-color" ng-show="form.emptyError" style="margin-top: 10px;">密码太长或太短</p>
+			<p class="main-color" ng-show="form.uniqueError" style="margin-top: 10px;">两次密码不一致</p>
+			<p class="main-color" ng-show="form.sameError" style="margin-top: 10px;">新密码和旧密码一样</p>
+			<p class="main-color" ng-show="form.pswError" style="margin-top: 10px;">原密码错误</p>
+
+			<div class="div-bottom">
+				<button class="button button-positive main-color" ng-click="save()">保 存</button>
+			</div>
+		</div>
+	</ion-content>
+	
+</ion-view>

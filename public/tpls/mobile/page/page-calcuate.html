@@ -1,0 +1,54 @@
+<ion-view view-title="计算详情" class="calculate-page" cache-view=false>
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y="false">
+		<div class="div-all">
+			<div class="div-top">
+				<div class="div-top-ctain">
+					<p class="div-top-ctain-title title">计算公式</p>
+					<p class="content">[(数值A + 数值B) ÷ 商品所需人次] 取余数 + 10000001</p>
+				</div>
+			</div>
+			<div class="div-mid">
+				<div class="div-mid-A">
+					<p class="div-mid-title title">数值A</p>
+					<p class="div-mid-content content">= 截至该商品最后夺宝时间最后50条全站参与记录</p>
+					<p class="div-mid-content content">= <span class="main-color" ng-show="init && A">{{A}}</span></p>
+					<a href="" ng-click="popOut = !popOut">
+						<span ng-if="!popOut">展开</span>
+						<i class="icon ion-chevron-down" ng-if="!popOut"></i>
+
+						<span ng-if="popOut">收起</span>
+						<i class="icon ion-chevron-up" ng-if="popOut"></i>
+					</a>
+				</div>
+				<div class="popOut" ng-show="popOut">
+					<dl>
+						<dt>夺宝时间<span>用户账号</span></dt>
+						<dd ng-repeat="record in records">{{record.buyTime}} - <span class="main-color">{{record.buyTime.split(" ")[1].replace('.','').replace(':','').replace(':','')}}</span><span class="userNam">{{record.userName}}</span></dd>
+					</dl>
+				</div>
+				<div class="div-mid-B">
+					<p class="div-mid-title title">数值B</p>
+					<p class="div-mid-content content">= 最近一期福利彩票的揭晓结果</p>
+					<p class="div-mid-content content">= 
+						<span class="yellow-color" ng-show="init && B">{{B}}</span>
+						<span class="yellow-color" ng-show="init && !B">正在等待揭晓...</span>
+						 (第{{sscTerm}}期)</p>
+					<a href="http://www.shishicai.cn/cqssc" target="_blank">揭晓查询</a>
+				</div>
+			</div>
+			<div class="div-btm">
+				<p class="title">计算结果</p>
+				<p class="div-btm-content">幸运号码：	
+ 					<span class="main-color" ng-show="init && result">{{result}}</span>
+					<span class="yellow-color" ng-show="init && !result">等待揭晓</span>
+				</p>
+			</div>
+		</div>	
+	</ion-content>
+	
+</ion-view>

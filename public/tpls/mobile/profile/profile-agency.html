@@ -1,0 +1,52 @@
+<ion-view view-title="佣金汇总" class="anency-page" cache-view=false>
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+    	<ion-nav-buttons side="right">
+            <button class="button button-clear">代理规则</button>
+        </ion-nav-buttons>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y=false>
+		<div class="list">
+			<div class="item item-divider">汇总</div>
+			<div class="item item-icon-right">
+				总会员数
+				<i class="icon number">{{member.memberNum}}</i>
+			</div>
+			<div class="item item-icon-right">
+				钱包
+				<i class="icon number">￥{{member.cash}}</i>
+			</div>
+		</div>
+		<div class="list">
+			<div class="item item-divider">当月摘要</div>
+			<div class="item item-icon-right">
+				新注册
+				<i class="icon number">{{month.monthRegister}}</i>
+			</div>
+			<div class="item">
+				返佣比例
+				<i class="icon number">{{month.rate}}%</i>
+			</div>
+			<div class="item">
+				当月流水
+				<i class="icon number">￥{{month.monthCount}}</i>
+			</div>
+		</div>
+		<div class="list">
+			<div class="item item-divider">提现记录</div>
+			<div class="item" ng-repeat='item in withdraw track by $index'>
+				{{item.time.split(' ')[0]}}
+				<i class="icon number balanced" ng-show="item.isApproved==1">￥{{item.amount}}(提现成功)</i>
+				<i class="icon number" ng-show="item.isApproved==0">￥{{item.amount}}(审批中)</i>
+			</div>
+			<div class="item" ng-show="withdraw && withdraw.length == 0">
+				<i class-"icon number">暂无记录</i>
+			</div>
+		</div>
+
+		<button class="button button-block button-stable" ng-click="modal.show()">提现</button>
+	</ion-content>
+	
+</ion-view>

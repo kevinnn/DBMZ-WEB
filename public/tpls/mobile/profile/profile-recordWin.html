@@ -1,0 +1,44 @@
+<ion-view view-title="中奖记录" class="profile-recordWin-page has-tabs-top" cache-view=false>
+
+    <ion-nav-bar class="bar-stable has-tabs-top">
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
+    
+    <ion-content scrollbar-y="false">
+    <ion-refresher pulling-text="下拉刷新.." on-refresh="doRefresh()"></ion-refresher>
+    <!-- 没有记录时显示 -->
+    <div class="nullRecord" ng-show="records.length == 0 && init">
+        <img src="/public/img/mobile/null-record@2x.png"/>
+    </div>
+    <div class="profile-recordBuy-list">
+        <div class="list">
+            <div ng-repeat="record in records">
+                <img class="winner-tip" ng-src="/public/img/mobile/winner-tip@2x.png" src="/public/img/mobile/winner-tip@2x.png">
+                <a href="/mobile.html#/tab/profile/winDetail-{{record.winOrderId}}" class="item item-thumbnail-left">
+                    <img ng-src="{{record.thumbnailUrl}}" alt="{{record.title}}">
+                    <h2 class="list-title">{{record.title}}</h2>
+                    <p class="list-term">期号：{{record.term}}</p>
+                    <p class="list-price">总需：<span class="positive">{{record.price}}</span> 人次</p>
+                    <p class="list-result">幸运号码：<span class="assertive">{{record.result}}</span></p>
+                    
+                    <p class="list-count">本期参与：<span class="assertive">{{record.count}}</span> 人次</p>
+                    <p class="list-startTime">揭晓时间：{{record.endTime}}</p>
+                </a>
+                <div class="item-below-list" ng-show="record.logisticsStatus==0">
+                    <p class="profile-recordWin-status"><span class="assertive">确认收货地址</span></p>
+                </div>
+                <div class="item-below-list" ng-show="record.logisticsStatus==1">
+                    <p class="profile-recordWin-status"><span class="positive">等待商品派发</span></p>
+                </div>
+                <div class="item-below-list" ng-show="record.logisticsStatus==2">
+                    <p class="profile-recordWin-status"><span class="positive">已发货</span></p>
+                </div>
+                <div class="item-below-list" ng-show="record.logisticsStatus>=3">
+                    <p class="profile-recordWin-status"><span class="balanced">已签收</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <ione-scroll ng-if="records.length > 0 && hasMoreData" one="loadMoreData()" distance="2%" immediate-check=false></ion-infinite-scroll>
+    </ion-content>
+</ion-view>

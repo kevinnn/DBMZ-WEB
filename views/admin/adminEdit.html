@@ -1,0 +1,109 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<script src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$.ajax({
+        url:'/admin/admin/isLogin',
+        type:'GET',
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = '/admin/login.html';
+            }
+        }
+    })
+</script>
+<style type="text/css">
+	.myhide {
+		display: none;
+	}
+	.myerror {
+		color:red;
+	}
+</style>
+</head>
+<body>
+<div class="header lr10">
+   	<h3 class="nav_icon">修改管理员</h3></div>
+<div class="bk10"></div>
+
+<div class="table_form lr10">
+<table width="100%" class="lr10">
+    <tr>
+    	<td width="80">用户名</td> 
+   		<td id="username"></td>
+    </tr>
+    <tr>
+    	<td>密码</td>
+    	<td><input type="password" name="password" class="input-text" id="password" value=""></input><span id="passwordEmpty" class="myhide myerror">密码不能为空</span></td>
+    </tr>
+    <tr>
+    	<td>确认密码</td> 
+    	<td><input type="password" name="pwdconfirm" class="input-text" id="pwdconfirm" value=""></input><span id="passwordNotSame" class="myhide myerror">两次密码不相等</span></td>
+    </tr>
+    <tr>
+</table>
+   	<div class="bk15"></div>
+    <input type="button" value=" 修改 " id="dosubmit" class="button">
+</div><!--table-list end-->
+<script type="text/javascript">
+	var passwordIsOk = true;
+	var pwdconfirmIsOk = true;
+	function getQueryString(name) {
+		var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+		var r = window.location.search.substr(1).match(reg);
+		if (r != null) return unescape(r[2]); return null;
+	}
+	$("#username").text(getQueryString("username"));
+	var id = getQueryString("id");
+	var passwordHandler = function () {
+		password = document.getElementById("password").value;
+		if (password.length == 0) {
+			$("#passwordEmpty").removeClass("myhide");
+			passwordIsOk = false;
+		} else {
+			$("#passwordEmpty").addClass("myhide");
+			passwordIsOk = true;
+		}
+	}
+	var pwdconfirmHandler = function () {
+		var pwdconfirm = document.getElementById("pwdconfirm").value;
+		if (password != pwdconfirm) {
+			$("#passwordNotSame").removeClass("myhide");
+			pwdconfirmIsOk = false;
+		} else {
+			$("#passwordNotSame").addClass("myhide");
+			pwdconfirmIsOk = true;
+		}
+	}
+	document.getElementById("password").onblur = passwordHandler;
+	document.getElementById("pwdconfirm").onblur = pwdconfirmHandler;
+	document.getElementById("dosubmit").onclick = function (event) {
+		passwordHandler();
+		pwdconfirmHandler();
+		if (passwordIsOk && pwdconfirmIsOk) {
+			event.target.value = "修改中";
+			event.target.disabled = true;
+			$.ajax({
+				url: "/admin/admin/adminUpdate",
+				type: "POST",
+				data: {
+					id: id,
+					password: password
+				},
+				success: function (data) {
+					if (data.code == 200) {
+						location.href = "/views/admin/adminList.html";
+					}
+				}
+			});
+		}
+	}
+
+</script>
+</body>
+</html> 

@@ -1,0 +1,46 @@
+<ion-view view-title="最新揭晓" class="tab-result">
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y="false">
+		<ion-refresher pulling-text="下拉刷新.." on-refresh="doRefresh()"></ion-refresher>
+		<!-- 没有记录时显示 -->
+		<div class="nullRecord" ng-show="init && remainRecords.length == 0 && finishRecords.length == 0 && init">
+			<img src="/public/img/mobile/null-record@2x.png"/>
+		</div>
+		<ion-list>
+			<ion-item class="result-card" ng-repeat="record in remainRecords track by $index">
+				<a href="#/tab/result/yungou-{{record.yungouId}}-{{timeStamp}}">
+					<img ng-src="{{record.thumbnailUrl}}" width=100 height=100>
+					<div class="div-right">
+						<p class="title black333-text">{{record.title}}</p>
+						<p class="term">期号：{{record.term}}</p>
+						<p class="description" ng-hide="timeoutArr[$index]==0"><span class="ion-android-time"></span> 即将揭晓</p>
+						<p class="time" ng-hide="timeoutArr[$index]==0"><span>{{timeoutArr[$index]|minute}}</span>:<span>{{timeoutArr[$index]|second}}</span>:<span>{{timeoutArr[$index]|microsecond}}</span></p>
+						<p class="winner" ng-hide="record.winUser.length == 0">恭喜 <span class="main-color">{{record.winUser.userName}}</span> <span class="blue-text">({{record.winUser.ip}})</a> 获得该商品</p>
+						<p class="lucky-number" ng-hide="record.winUser.length == 0">幸运号码：<span class="main-color">{{record.winUser.result}}</span></p>
+						<p class="amount" ng-hide="record.winUser.length == 0">本期参与：<span class="main-color">{{record.winUser.count}}</span>人次</p>
+						<p class="end-time" ng-hide="record.winUser.length == 0">揭奖时间：{{record.endTime}}</p>
+					</div>
+				</a>
+			</ion-item>
+			<ion-item class="result-card" ng-repeat="record in finishRecords track by $index">
+				<a href="#/tab/result/yungou-{{record.yungouId}}-{{timeStamp}}">
+					<img ng-src="{{record.thumbnailUrl}}" width=100 height=100>
+					<div class="div-right">
+						<p class="title black333-text">{{record.title}}</p>
+						<p class="term">期号：{{record.term}}</p>
+						<p class="winner">恭喜 <span class="main-color">{{record.winUser.userName}}</span> <span class="blue-text">({{record.winUser.loginArea}})</span> 获得该商品</p>
+						<p class="lucky-number">幸运号码：<span class="main-color">{{record.winUser.result}}</span></p>
+						<p class="amount">本期参与：<span class="main-color">{{record.winUser.count}}</span>人次</p>
+						<p class="end-time">揭奖时间：{{record.endTime}}</p>
+					</div>
+				</a>
+			</ion-item>
+			<ion-infinite-scroll ng-if="(remainRecords.length > 0 || finishRecords.length > 0) && hasMoreData" on-infinite="loadMoreData()" distance="2%" immediate-check=false></ion-infinite-scroll>
+		</ion-list>
+	</ion-content>
+	
+</ion-view>

@@ -1,0 +1,49 @@
+<ion-view view-title="晒单" class="profile-expose-edit-page has-tabs-top" cache-view=false>
+    <ion-nav-bar class="bar-stable has-tabs-top">
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-nav-bar class="bar-stable has-tabs-top">
+        <ion-nav-buttons side="left">
+            <button ng-click="$ionicGoBack()" class="button back-button buttons button-clear header-item">
+            <i class="icon ion-chevron-left"></i>
+            我的晒单
+            </button>
+        </ion-nav-buttons>
+        <ion-nav-buttons side="right">
+            <button class="button button-clear buttons header-item" ng-click="add()">
+                发布
+            </button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
+    <ion-content scrollbar-y="false">
+        <div class="list">
+            <label for="" class="item item-input" ng-class="{'error':show.showTitle == undefined || show.showTitle.length < 6 || show.showTitle.length > 20}">
+                <input type="text" placeholder="晒单主题， 不少于4个字" maxlength="20" ng-minlength="4" required="晒单主题， 不少于6个字" class="expose-title" ng-foucs="scrollToTop()" ng-model="show.showTitle">
+            </label>
+            <label for="" class="item item-input" ng-class="{'error':show.showContent == undefined ||show.showTitle.length < 6 || show.showTitle.length > 20}">
+                <textarea class="expose-content" placeholder="获奖感言，不少于30个字，审核通过，将获得100积分奖励！" maxlength="255" ng-minlength="15" ng-foucs="scrollToTop()" ng-model="show.showContent"></textarea>
+            </label>
+            <div class="expose-img-list">
+                <div class="expose-img-item" ng-repeat="item in exposeImgList track by $index">
+                    <div class="delete-img-button" ng-click="deleteOneExposeImg($index,$event)">
+                        <i class="ion-close-circled"></i>
+                    </div>
+                    <img ng-src="{{item}}">
+                </div>
+                
+                <div class="expose-img-list-add-button" ng-show="exposeImgList.length < 4">
+                <i class="ion-android-add"></i>
+                <input type="file" capture="camera" accept="image/*" onchange="angular.element(this).scope().uploadFile(this.files)" id="cameraInput" style="opacity:0;position:absolute;left: 0;width: 100%;height: 100%;">
+                </div>
+            </div>
+            <div class="expose-product-info">
+                <p>获奖商品：{{record.title}}</p>
+                <p>参与期号：{{record.term}}</p>
+                <p>幸运号码：<span class="main-color">{{record.result}}</span></p>
+                <p>本期参与： <span class="main-color">{{record.parCount}}</span> 人次</p>
+                <p>揭奖时间：{{record.endTime}}</p>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

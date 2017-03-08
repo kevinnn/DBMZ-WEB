@@ -1,0 +1,45 @@
+<ion-view view-title="用户反馈" class="profile-suggest-page has-tabs-top">
+
+   <ion-nav-bar class="bar-stable has-tabs-top">
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
+
+    <ion-content scrollbar-y="false">
+        <div class="profile-address-edit">
+            <ul class="list">
+                <li class="item item-toggle set-default">
+                    <label class="toggle toggle-balanced title">
+                        <p>感谢您的意见和建议，我们收到后会尽快回复</p>
+                    </label>
+                </li>
+                 <li class="item province">
+                    <label class="item item-input item-select">
+                        <span class="input-label">主题</span>
+                        <select required ng-focus ng-model="data.theme">
+                            <option value="1">投诉与建议</option>
+                            <option value="2">商品配送</option>
+                            <option value="3">售后服务</option>
+                        </select>
+                    </label>
+                </li>
+                <li class="item address-detail">
+                    <label class="item item-input">
+                        <span class="input-label">反馈内容:</span>
+                        <textarea maxlength="200" minlength="12" placeholder="内容长度为12-200字" ng-model="data.content" required ng-focus></textarea>
+                    </label>
+                </li>
+                <li class="item receiver">
+                    <label class="item item-input">
+                        <span class="input-label">联系方式(可选):</span>
+                        <input type="text" placeholder="请输入您的QQ/电话/邮箱" ng-model="data.email">
+                    </label>
+                </li>
+                <p class="main-color error-msg" ng-show="data.contentError" style="">内容长度不正确</p>
+            </ul>
+            <div class="add-address-div">
+                <button class="button main-color add-address-button" ng-click="saveSuggest()">提交</button>
+            </div>
+        </div>
+    </ion-content>
+
+</ion-view>

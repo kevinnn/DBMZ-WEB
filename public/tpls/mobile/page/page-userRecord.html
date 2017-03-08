@@ -1,0 +1,125 @@
+<ion-view view-title="Ta的中心" class="userRecord has-header">
+
+	<ion-nav-bar class="bar-stable">
+		<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<!-- 排序 -->
+	<ion-subheader-bar class="bar bar-subheader">
+		<div class="avatarBg">
+			<p class="avatar" ng-cloak>
+				<a href="#/tab/profile-setting"><img ng-src="{{otherUser.avatorUrl}}"/></a>
+			</p>
+			<p class="login-but" ng-cloak>
+				<button class="button button-outline" style="border:none;">
+					<p>{{otherUser.userName}}</p>
+					<p>ID:{{otherUser.id}}</p>
+				</button>
+			</p>
+			<div class="alpha"></div>
+		</div>
+		<ul>
+			<li ng-class="{active:current_item===0}" ng-click="selectItem(0)"><p>订单记录</p></li>
+			<li ng-class="{active:current_item===1}" ng-click="selectItem(1)"><p>中奖记录</p></li>
+			<li ng-class="{active:current_item===2}" ng-click="selectItem(2)"><p>Ta的晒单</p></li>
+			<div class="active-bar" ng-style="{'left':current_item*33.3333+'%','width':+33.3333+'%'}"></div>
+		</ul>
+	</ion-subheader-bar>
+
+	<ion-content scrollbar-y="false">
+		<ion-refresher pulling-text="下拉刷新.." on-refresh="doRefresh()"></ion-refresher>
+		<!-- 没有记录时显示 -->
+		<div class="nullRecord" ng-show="initOfRecords && records.length == 0 && current_item == 0 || initOfWinRecords && winRecords.length == 0 && current_item == 1 || initOfShows && shows.length == 0 && current_item == 2">
+			<img src="/public/img/mobile/null-record@2x.png"/>
+		</div>
+
+		<!-- 我的晒单 -->
+		<ion-list ng-show="current_item==2">
+			<ion-item class="show-card item-avatar" ng-repeat="show in shows">
+				<img class="avatar" ng-src="{{otherUser.avatorUrl}}">
+				<div>
+					<p class="time">{{show.createdTime}}</p>
+					<p><a class="userName" href="#/tab/{{activedTab}}/userRecord-{{otherUser.id}}">{{otherUser.userName}}</a></p>
+						<a href="#/tab/{{activedTab}}/show-{{show.showId}}-{{timeStamp}}">
+	  					<div class="content">
+		  					<p class="title">{{show.title}}</p>
+		  					<p class="proName">{{show.productTitle}}</p>
+							<p class="term">期号：{{show.term}}</p>
+							<p class="comment">{{show.content}}</p>
+							<div class="showImg">
+								<img ng-repeat="img in show.imgUrls track by $index" ng-src="{{img}}"></img>
+							</div>
+		  				</div>
+	  				</a>
+				</div>
+			</ion-item>
+			<ion-infinite-scroll ng-if="current_item == 2 && shows.length > 0 && hasMoreDataOfShows" on-infinite="getShows()" distance="2%" immediate-check=false></ion-infinite-scroll>
+		</ion-list>
+		
+	
+ 		<!-- 中奖记录 -->
+ 		<ion-list ng-show="current_item==1">
+ 			<ion-item class="winRecord" ng-repeat="winRecord in winRecords track by $index" ng-click="toYungou({{winRecord.yungouId}})">
+ 				<img  class="winner-tip" ng-src="/public/img/mobile/winner-tip@2x.png"/>
+				<img class="proImg" ng-src="{{winRecord.thumbnailUrl}}"/>
+				<div class="proContent">
+					<p class="proName">{{winRecord.title}}</p>
+					<p class="proTerm">期号:{{winRecord.term}}</p>
+					<p>总需:<span class="totalCount">{{winRecord.price}}</span>人次</p>
+  					<p class="luckyNum">幸运号码:<span class="main-color">{{winRecord.result}}</span></p>
+  					<p class="count">本期参与:<span>{{winRecord.count}}</span>人次</p>
+					<p class="endTime">揭晓时间：{{winRecord.endTime}}</p>
+				</div>
+			</ion-item>
+			<ion-infinite-scroll ng-if="current_item == 1 && winRecords.length > 0 && hasMoreDataOfWinRecords" on-infinite="getWinRecord()" distance="2%" immediate-check=false></ion-infinite-scroll>
+ 		</ion-list>
+ 		<!-- 订单记录 -->
+ 		<ion-list ng-show="current_item==0">
+ 			<ion-item class="winRecord orderRecord" ng-repeat="record in records track by $index">
+ 				<img  class="winner-tip" ng-src="/public/img/mobile/winner-tip@2x.png" ng-show="record.isWin == 1"/>
+				<img class="proImg" ng-src="{{record.thumbnailUrl}}"/>
+				<div class="proContent">
+					<p class="proName">{{record.title}}</p>
+					<p class="proTerm">
+						期号:{{record.term}}
+						<a href="#/tab/{{activedTab}}/yungou-{{record.yungouId}}-{{timeStamp}}">查看详情</a>
+					</p>
+  					<p class="count">本期参与：<span>{{record.count}}</span>人次</p>
+				</div>
+	 			<!-- status=2 -->
+				<div class="record-bar winner-bar" ng-show="record.status == 2">
+					<p class="winner">
+						获得者：
+						<a href="#/tab/{{activedTab}}/userRecord-{{record.winUser.userId}}">{{record.winUser.userName}}</a>
+					</p>
+					<div class="count">
+						<p>
+						<span>{{record.winUser.count}}</span>人次
+						</p>
+						<button class="button button-outline" ng-click="toLatestYungou({{record.yungouId}})">购买</button>
+					</div>
+				</div>
+	 			<!-- status=1 -->
+				<div class="record-bar open-bar" ng-show="record.status == 1">
+					<p class="open">
+						<span class="ion-android-time"></span>
+						<span class="open-text">即将揭晓：正在计算中，请稍候...</span>
+					</p>
+					<button class="button button-outline" ng-click="toLatestYungou({{record.yungouId}})">购买</button>
+				</div>
+				<!-- status=0 -->
+				<div class="record-bar wait-bar" ng-show="record.status == 0">
+
+					<div class="progress-bar-wrap">
+						<span class="progress-price">总需人次:{{record.price}}</span>
+						<span class="progress-remain">剩余:{{record.price-record.saleCount}}</span>
+						<span class="progress-bar" ng-style="{'width':(record.saleCount/record.price)*100+'%'}"></span>
+					</div>
+						<button class="button" ng-click="toYungou({{record.yungouId}})">跟买</button>
+				</div>
+			</ion-item>
+			<ion-infinite-scroll ng-if="current_item == 0 && records.length > 0 && hasMoreDataOfRecords" on-infinite="getRecord()" distance="2%" immediate-check=false></ion-infinite-scroll>
+ 		</ion-list>
+		
+ 	</ion-content>
+</ion-view>

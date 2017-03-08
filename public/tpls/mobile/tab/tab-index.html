@@ -1,0 +1,68 @@
+<ion-view class="tab-index">
+
+	<ion-nav-bar class="bar-stable">
+		<!-- 头部 -->
+		<ion-nav-buttons side="left">
+			<button menu-toggle="left" class="button button-icon icon ion-navicon" ng-click="toggleleftSideMenu()"></button>
+		</ion-nav-buttons>
+		<ion-nav-title ng-bind="index_title"></ion-nav-title>
+
+		<!-- 排序 -->
+		<ion-subheader-bar class="bar bar-subheader">
+			<ul>
+				<li ng-class="{active:current_sort===0}" ng-click="selectSort(0)"><p>推荐</p></li>
+				<li ng-class="{active:current_sort===1}" ng-click="selectSort(1)"><p>最热</p></li>
+				<li ng-class="{active:current_sort===2}" ng-click="selectSort(2)"><p>进度</p></li>
+				<li ng-class="{active:current_sort===3}" ng-click="selectSort(3)"><p>总需人次 <span class="ion-arrow-up-c" ng-show="isUp"></span><span class="ion-arrow-down-c" ng-show="isDown"></span></p></li>
+			</ul>
+			<div class="active-bar" ng-style="{'left':current_sort*24.3+'%'}"></div>
+		</ion-subheader-bar>
+	</ion-nav-bar>
+
+	<ion-content class="has-header has-subheader has-tabs" padding=0 id="tab-index-content">
+		
+		<ion-refresher pulling-text="下拉刷新.." on-refresh="doRefresh()"></ion-refresher>
+
+		<!-- 轮播 -->
+		<ion-slide-box does-continue=true auto-play=true show-pager=true slide-interval=3000 ng-show="banners.length>0">
+			<ion-slide ng-repeat="banner in banners">
+				<a href="{{banner.url}}" ng-click="toLatestYungou('{{banner.productId}}',$event)" ng-style="{'display':'block','width':'100%','height':'140px','background-size':'cover','background-position':'50% 50%','background-image':'url({{banner.mobileImgUrl}})'}"></a>
+			</ion-slide>
+		</ion-slide-box>
+
+		<!-- 夺宝商品 -->
+		<div class="duobao-wrapper container">
+			<div class="row" ng-repeat="index in [] | range:(yungous.length+1)/2">
+				<div class="col col-50 duobao-card" ng-if="2*index<yungous.length">
+					<a href="#/tab/index/yungou-{{yungous[2*index].yungou.id}}-{{timeStamp}}">
+						<img ng-src="{{yungous[2*index].product.thumbnailUrl}}" id="{{yungous[2*index].yungou.id}}">
+						<p class="title">{{yungous[2*index].product.title}}{{yungous[2*index].product.id}}</p>
+					</a>
+					<div class="progress-wrapper">
+						<button class="button-add-cart" ng-click="addToCart(yungous[2*index],$event);toCartCartoon(yungous[2*index].yungou.id,'tab-index-content',true)">加入清单</button>
+						<p class="progress-text">开奖进度 <span class="blue-text">{{((yungous[2*index].yungou.saleCount/yungous[2*index].product.price)*100).toFixed(0)}}%</span></p>
+						<div class="progress-bar-wrap">
+							<span class="progress-bar" ng-style="{'width':(yungous[2*index].yungou.saleCount/yungous[2*index].product.price)*100+'%'}"></span>
+						</div>
+					</div>
+					<img ng-src="/public/img/mobile/tenyuan.png" class="tenyuan" ng-if="yungous[2*index].product.singlePrice==10">
+				</div>
+				<div class="col col-50 duobao-card" ng-if="2*index+1<yungous.length">
+					<a href="#/tab/index/yungou-{{yungous[2*index+1].yungou.id}}-{{timeStamp}}">
+						<img ng-src="{{yungous[2*index+1].product.thumbnailUrl}}" id="{{yungous[2*index+1].yungou.id}}">
+						<p class="title">{{yungous[2*index+1].product.title}}{{yungous[2*index+1].product.id}}</p>
+					</a>
+					<div class="progress-wrapper">
+						<button class="button-add-cart" ng-click="addToCart(yungous[2*index+1],$event);toCartCartoon(yungous[2*index+1].yungou.id,'tab-index-content',true)">加入清单</button>
+						<p class="progress-text">开奖进度 <span class="blue">{{((yungous[2*index+1].yungou.saleCount/yungous[2*index+1].product.price)*100).toFixed(0)}}%</span></p>
+						<div class="progress-bar-wrap">
+							<span class="progress-bar" ng-style="{'width':(yungous[2*index+1].yungou.saleCount/yungous[2*index+1].product.price)*100+'%'}"></span>
+						</div>
+					</div>
+					<img ng-src="/public/img/mobile/tenyuan.png" class="tenyuan" ng-if="yungous[2*index+1].product.singlePrice==10">
+				</div>
+			</div>
+		</div>
+	</ion-content>
+
+</ion-view>

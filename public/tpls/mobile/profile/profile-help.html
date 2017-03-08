@@ -1,0 +1,92 @@
+<ion-view view-title="服务与帮助" class="help-page" cache-view=false>
+
+    <ion-nav-bar class="bar-stable">
+        <ion-nav-back-button></ion-nav-back-button>
+    </ion-nav-bar>
+
+    <ion-content scrollbar-y="false">
+        <div class="div-all">
+            <div class="div-top">
+                <img src="/public/img/mobile/logo.png" alt="">
+                <p class="info">Version:1.0</p>
+            </div>  
+            <div class="div-mid">
+                <div class="question">
+                    <p class="div-mid-content content">常见问题：</p>
+                </div>
+                <div class="question" ng-click="popOut1 = !popOut1">
+                    <p class="div-mid-content content">1. 夺宝获得的商品什么时候发货？</p>
+                    <a href="">
+                        <span ng-if="!popOut1"></span>
+                        <i class="icon ion-chevron-down" ng-if="!popOut1"></i>
+
+                        <span ng-if="popOut1"></span>
+                        <i class="icon ion-chevron-up" ng-if="popOut1"></i>
+                    </a>
+                </div>
+                <div class="popOut" ng-show="popOut1">
+                    <p>● 获得夺宝商品后请您尽快提交收货地址，超过7天未确认收货地址，视为自动放弃该商品（系统不会默认您的“收货地址”中的地址信息，每次获得夺宝商品后都需要确认收货地址）。一般商品派发周期为10个工作日左右。</p>
+                </div> 
+                <div class="question" ng-click="popOut2 = !popOut2">
+                    <p class="div-mid-content content">2. 夺宝获得的商品如何保修？</p>
+                    <a href="">
+                        <span ng-if="!popOut2"></span>
+                        <i class="icon ion-chevron-down" ng-if="!popOut2"></i>
+
+                        <span ng-if="popOut2"></span>
+                        <i class="icon ion-chevron-up" ng-if="popOut2"></i>
+                    </a>
+                </div>
+                <div class="popOut" ng-show="popOut2">
+                    <p>● 一元夺宝所有商品均从正规渠道采购，100%正品，可享受厂家所提供的全国联保服务。售后标准均依照该产品的售后标准进行。如产品遇到质量问题，建议第一时间联系该产品的官方指定售后维修点；若您遇到无法自行联系处理的，可联系客服小萌协助处理。</p>
+                </div> 
+                <div class="question" ng-click="popOut3 = !popOut3">
+                    <p class="div-mid-content content">3. 我可以修改已确认的收货地址吗?</p>
+                    <a href="">
+                        <span ng-if="!popOut3"></span>
+                        <i class="icon ion-chevron-down" ng-if="!popOut3"></i>
+
+                        <span ng-if="popOut3"></span>
+                        <i class="icon ion-chevron-up" ng-if="popOut3"></i>
+                    </a>
+                </div>
+                <div class="popOut" ng-show="popOut3">
+                    <p>● 获得夺宝商品后一旦确认收货地址，无法二次修改。请您慎重填写！如因用户个人原因，导致快递无法正常派发，二次寄送则由用户自行承担物流运输费用。</p>
+                </div> 
+                <div class="question" ng-click="popOut4 = !popOut4">
+                    <p class="div-mid-content content">4. 夺宝萌主开奖结果是公正的吗?</p>
+                    <a href="">
+                        <span ng-if="!popOut4"></span>
+                        <i class="icon ion-chevron-down" ng-if="!popOut4"></i>
+
+                        <span ng-if="popOut4"></span>
+                        <i class="icon ion-chevron-up" ng-if="popOut4"></i>
+                    </a>
+                </div>
+                <div class="popOut" ng-show="popOut4">
+                    <p>● 公平、公正是夺宝萌主赖以生存的根本。夺宝的幸运号码由公式计算得出，公式中的两个数字都是不受人为干扰的。</p>
+                    <p><span style="color: #ff0000;"><strong>幸运号码=10000001+变化值</strong></span></p>
+                    <p><span style="color: #ff0000;"><strong>变化值=（数值A+数值B）%数值C</strong></span></p>
+                    <p><strong>● 数值A：</strong>商品的最后一个号码分配完毕后，将该时间点前本站全部商品的最后50个参与时间的数值（每个时间按时、分、秒、毫秒的顺序组合，如20:15:10.362则为201525362）进行求和得出数值A；</p>
+                    <p><strong>● 数值</strong><strong>B</strong>：最近下一期中国福利彩票“老时时彩”的开奖号码（一个五位数值）</p>
+                    <p><strong>● 数值C</strong>：该商品所需人次</p>
+                    <p>● 在夺宝萌主幸运号码的计算公式中，我们加入了“下一期老时时彩开奖结果”这个数字，因为这个开奖结果是没有人可以预知的，而另一组购买时间之和则在老时时彩揭晓前已经公示，因此没办法做到人为干扰最终的幸运号码，计算结果是公平可信的。任何一个号码，都有获得夺宝商品的机会；当期参与的人次越多，获得夺宝商品的机会也就越大。 公平公正和透明是夺宝萌主的核心，所有的计算方法和号码分配信息都是公开的，一元夺宝非常欢迎您可以关注我们的每一期的夺宝活动号码分配和最终计算结果是否符合。相信越多用户来监督，就越能彰显一元夺宝的透明性和公平性，再次对您表示感谢，祝您夺宝愉快~！</p>
+                </div>
+                <div class="question" ng-click="popOut5 = !popOut5">
+                    <p class="div-mid-content content">5. 夺宝萌主快递有运费吗？</p>
+                    <a href="">
+                        <span ng-if="!popOut5"></span>
+                        <i class="icon ion-chevron-down" ng-if="!popOut5"></i>
+
+                        <span ng-if="popOut5"></span>
+                        <i class="icon ion-chevron-up" ng-if="popOut5"></i>
+                    </a>
+                </div>
+                <div class="popOut" ng-show="popOut5">
+                    <p>● 获得夺宝商品后确认收货地址，我们即为您派发快递。夺宝萌主承担全部物流运输费用。</p>
+                </div>             
+            </div>
+        </div>  
+    </ion-content>
+    
+</ion-view>

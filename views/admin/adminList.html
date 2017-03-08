@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<script type="text/javascript">
+    $.ajax({
+        url:'/admin/admin/isLogin',
+        type:'GET',
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = '/admin/login.html';
+            }
+        }
+    })
+</script>
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">管理员管理</h3>
+</div>
+
+<div class="bk10"></div>
+
+<div class="table-list lr10">
+<form name="myform" action="" method="post">
+  <table width="100%" cellspacing="0">
+    <thead>
+		<tr>
+		<th width="10%" align='center'>序号</th>
+		<th width="15%" align="center">用户名</th>
+		<th width="10%" align="center">所属角色</th>
+		<th width="10%" align="center">最后登录IP</th>
+		<th width="20%" align="center">最后登录时间</th>
+		<th width="15%">管理操作</th>
+		</tr>
+    </thead>
+  	<tbody id="tbody">
+        
+	</tbody>
+</table>
+</form>
+</div><!--table-list end-->
+
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script>
+    function adminDelete(id) {
+        $.ajax({
+            url: "/admin/admin/adminDelete",
+            type: "POST",
+            data: {
+                id : id
+            },
+            success: function (data) {
+                if (data.code == 200) {
+                    location.href = "/views/admin/adminList.html";
+                }
+            }
+        })
+    }
+	$.ajax({
+        'url': '/admin/admin/isLogin',
+        'type': 'GET',
+        'async': false,
+        success: function (data) {
+            if (data.code == 200) {
+                data = data.data;
+                $("#admin_username").text(data.username);
+            } else {
+                window.location.href = '/admin/login.html';
+            }
+        }
+    });
+    window.onload = function () {
+        $.ajax({
+            url: "/admin/admin/adminList",
+            type: "GET",
+            success: function (data) {
+
+                if (data.code == 200) {
+                    var arr = data.data;
+                    var str = "";
+                    for (var i = 0; i < arr.length; i++) {
+                        str += "<tr>"+
+                                "<td width='10%'' align='center'>"+arr[i].id+"</td>"+
+                                "<td width='15%' align='center'>"+arr[i].username+"</td>"+
+                                "<td width='10%' align='center'></td>"+
+                                "<td width='10%' align='center'>"+(arr[i].ip ? arr[i].ip : "")+"</td>"+
+                                "<td width='20%' align='center'>"+(arr[i].loginTime ? arr[i].loginTime : "")+"</td>"+
+                                "<td width='15%' align='center'>"+
+                                    "<a href='/views/admin/adminEdit.html?id="+arr[i].id+"&username="+arr[i].username+"'>修改</a>"+
+                                    "<span class='span_fenge lr5'>|</span>"+
+                                    "<a href='javascript:void(0);' onclick='adminDelete("+arr[i].id+")'>删除</a>"+
+                                "</td>"+
+                            "</tr>";
+                    }
+                    $("#tbody").html(str);
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html> 

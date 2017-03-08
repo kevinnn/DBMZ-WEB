@@ -1,0 +1,17 @@
+ <ion-modal-view>
+	<ion-header-view class="bar bar-header bar-stable">
+		<h1 class="title">提现</h1>
+		<button class="button button-icon icon ion-android-close" ng-click="modal.hide()"></button>
+	</ion-header-view>
+    <ion-content class="padding has-header modal-withdraw">
+    	<div class="withdraw">
+	    	<p class="title">提现金额</p>
+	        <span class="input-label">￥</span>
+	        <input class="amount" type="number" id="typeIn" maxlength="50" placeholder="输入金额" required ng-model="money"></input>
+			<hr class="line">
+		    <p class="info">单次提现额度为10元以上的整数</p>
+	    </div>
+	    <p class="hint">当天24点前到账</p>
+	    <button class="button withdraw-button" ng-click="withdrawFn()">提款</button>
+    </ion-content>
+</ion-modal-view>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台首页</title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+ <style>
+ 	th{ border:0px solid #000;}
+	tr{ line-height:30px;}
+ </style>
+
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">品牌管理</h3>
+   <span class="span_fenge lr10"></span>
+   <a href="/views/admin/brand.html">品牌管理</a>
+   <span class="span_fenge lr5">|</span><a href="/views/admin/brandAdd.html">添加品牌</a>
+</div>
+<div class="bk10"></div>
+<div class="table-list lr10">
+<table width="100%" cellspacing="0">
+   <thead>
+         <tr>
+            <th align='center'>id</th>
+            <th align='center'>品牌名称</th>
+   			<th align='center'>管理操作</th>
+         </tr>
+   </thead>
+   <tbody id="tbody">
+   </tbody>
+</table>
+<div id="pages">
+   <ul>
+      <li id='totalPage'></li>
+      <li><a id='Page_Prev' href="javascript:void(0);">上一页</a></li>
+      <li><a id='Page_Next' href="javascript:void(0);">下一页</a></li>
+      <li><a id='Page_One' href="/views/admin/brand.html?page=1">首页</a></li>
+      <li><a id='Page_End' href="javascript:void(0);">尾页</a></li>
+   </ul>
+</div>
+</div>
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        url:'/admin/admin/isLogin',
+        type:'GET',
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = '/admin/login.html';
+            }
+        }
+    })
+</script>
+<script type="text/javascript">
+   function getQueryString(name) {
+      var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+      var r = window.location.search.substr(1).match(reg);
+      if (r != null) return unescape(r[2]); return null;
+   }
+   function deleteBrand(id) {
+      $.ajax({
+         url: '/admin/brand/deleteBrand',
+         type: 'POST',
+         data: {
+            id: id
+         },
+         success: function (data) {
+            if (data.code == 200) {
+               location.reload();
+            }
+         }
+      })
+   }
+   $.ajax({
+      url: '/admin/brand/brandList'+location.search,
+      type: 'GET',
+      success: function (data) {
+         if (data.code == 200) {
+            data = data.data;
+            var str = "";
+            for (var i = 0; i < data.length; i++) {
+               str += "<tr>" +
+                        "<td align='center'>" + data[i]['id'] + "</td>" +
+                        "<td align='center'>" + data[i]['name'] + "</td>" +
+                        "<td align='center'>" +
+                           "[<a href='/views/admin/brandEdit.html?id="+data[i]['id']+"'>修改</a>]"+
+                           "[<a href='javascript:void(0);' onclick='deleteBrand("+data[i]['id']+")'>删除</a>]"+
+                        "</td>"+
+                     "</tr>";
+            }
+            $('#tbody').html(str);
+            
+         }
+      }
+   });
+   $.ajax({
+      url: '/admin/brand/brandCount',
+      type: 'GET',
+      success: function (data) {
+         console.log(data);
+         if (data.code == 200) {
+            var count = data.data;
+            $('#totalPage').text('共 '+count+' 条');
+            var page = getQueryString('page');
+            page = page ? page : 1;
+            console.log(page);
+            if (page > 1) {
+               document.getElementById('Page_Prev').href = '/views/admin/brand.html?page='+(page-1);
+            }
+            if (page*20 < count) {
+               document.getElementById('Page_Next').href = '/views/admin/brand.html?page='+(parseInt(page)+1);
+            }
+            document.getElementById('Page_End').href = '/views/admin/brand.html?page='+(parseInt(count/20)+(count%20 !=0 ? 1 : 0));
+         }
+      }
+   })
+</script>
+</body>
+</html> 

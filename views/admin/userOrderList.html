@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<style>
+tbody tr{ line-height:30px; height:30px;} 
+</style>
+</head>
+<body>
+<div class="bk10"></div>
+<div class="table-list lr10">
+<!--start-->
+<table width="100%" cellspacing="0">
+    <thead>
+		<tr>
+        	<th align="center">订单号</th>
+            <th align="center">购买用户</th>
+            <th align="center">收银号</th>
+            <th align="center">商品标题</th>            
+            <th align="center">购买次数</th>
+            <th align="center">是否支付</th>
+            <th align="center">支付方式</th>
+            <th align="center">购买日期</th>
+            <th align="center">是否中奖</th>
+            <th align="center">订单状态</th>
+            <th align="center">管理</th>
+		</tr>
+    </thead>
+    <tbody id="tbody">
+  	</tbody>
+</table>
+<div class="btn_paixu"></div>
+<div id="pages">
+    <ul>
+        <li id="totalPage"></li>
+        <li><a id='Page_Prev' href="javascript:void(0);">上一页</a></li>
+        <li><a id='Page_Next' href="javascript:void(0);">下一页</a></li>
+        <li><a id='Page_One' href="javascript:void(0);">首页</a></li>
+        <li><a id='Page_End' href="javascript:void(0);">尾页</a></li>
+    </ul>
+</div>
+</div><!--table-list end-->
+
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+    function getQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]); return null;
+    }
+    var query = "",
+        page = getQueryString("page");
+        productId = getQueryString("productId"),
+        isWin = getQueryString("isWin"),
+        status = getQueryString("status"),
+        logisticsStatus = getQueryString("logisticsStatus");
+        isPay = getQueryString("isPay");
+    page = page ? page : 1;
+    query += productId ? ("&productId="+productId) : "";
+    query += isWin ? ("&isWin="+isWin) : "";
+    query += status && status != "null" ? ("&status="+status) : "";
+    query += logisticsStatus ? ("&logisticsStatus="+logisticsStatus) : "";
+    query += isPay ? ("&isPay="+isPay) : "";
+    window.onload = function () {
+        $.ajax({
+            url: "/admin/order/orderList"+location.search,
+            type: "GET",
+            success: function (data) {
+                console.log(data);
+                if (data.code == 200) {
+                    var arr = data.data;
+                    var str = "";
+                    var paymentstr = "";
+                    for (var i = 0; i < arr.length; i++) {
+                        switch (arr[i]['payment']){
+                            case null:
+                                paymentstr = "余额支付";
+                                break;
+                            case '1':
+                                paymentstr = "支付宝";
+                                break;
+                            case '2':
+                                paymentstr = "微信";
+                                break;
+                            case '3':
+                                paymentstr = "银联";
+                                break;
+                            case '4':
+                                paymentstr = "网银";
+                                break;
+                        }
+                        str += "<tr>"+
+                                    "<td align='center'>"+arr[i]['orderId']+"</td>"+
+                                    "<td align='center'>"+arr[i]['userName']+"</td>"+
+                                    "<td align='center'>"+arr[i]['cashierid']+"</td>"+
+                                    "<td align='center'>"+
+                                        "<a href='/views/admin/orderList.html?productId="+arr[i]["productId"]+"'>"+arr[i]['title']+"</a>"+
+                                    "</td>"+                                    
+                                    "<td align='center'>"+arr[i]['count']+"人次</td>"+
+                                    "<td align='center'>"+(arr[i]['isPay']==1 ? "已支付" : "未支付")+"</td>"+
+                                    "<td align='center'>"+paymentstr+"</td>"+
+                                    "<td align='center'>"+arr[i]['buyTime']+"</td>"+
+                                    "<td align='center'>"+(arr[i]['isWin']==null ? "未开奖" : (arr[i]['isWin'] == 0 ? "未中奖" : "中奖"))+"</td>"+
+                                    "<td align='center'>"+(arr[i]['status']==0 ? "未完成" : "已完成")+"</td>"+
+                                    "<td align='center'>"+
+                                        "<a href='/views/admin/orderDetail.html?id="+arr[i]['orderId']+"'>详细</a>"+
+                                    "</td>"+
+                                "</tr>";
+                    }
+                    $("#tbody").html(str);
+                }
+            }
+        });
+        $.ajax({
+            url: "/admin/order/orderCount"+location.search,
+            type: "GET",
+            success: function (data) {
+                console.log(data);
+                if (data.code == 200) {
+                    var count = data.data;
+                    $("#totalPage").text("共 "+count+" 条");
+                    if (page > 1) {
+                        document.getElementById("Page_Prev").href = "/views/admin/orderList.html?page="+(page-1)+query;
+                    }
+                    document.getElementById("Page_One").href = "/views/admin/orderList.html?page=1"+query;
+                    if (page*20 < count) {
+                        document.getElementById("Page_Next").href = "/views/admin/orderList.html?page="+(parseInt(page)+1)+query;
+                    }
+                    document.getElementById("Page_End").href = "/views/admin/orderList.html?page="+(parseInt(count/20)+(count%20 !=0 ? 1 : 0))+query;
+                }
+            }
+        })
+    }
+</script>
+</body>
+</html> 

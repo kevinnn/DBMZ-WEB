@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<style type="text/css">
+tr{height:40px;line-height:40px}
+.dingdan_content{width:650px;border:1px solid #d5dfe8;background:#eef3f7;float:left; padding:20px;}
+.dingdan_content li{ float:left;width:310px;}
+.dingdan_content_user{width:650px;border:1px solid #d5dfe8;background:#eef3f7;float:left; padding:20px;}
+.dingdan_content_user li{ line-height:25px;}
+
+.api_b{width:80px; display:inline-block;font-weight:normal}
+.yun_ma{ word-break:break-all; width:200px; background:#fff; overflow:auto; height:100px; border:5px solid #09F; padding:5px;}
+</style>
+</head>
+<body marginwidth="0" marginheight="0">
+<div class="header-title lr10">
+	<b>订单详情</b>
+</div>
+<div class="bk10"></div>
+<div class="table-list lr10" id="content">
+<!--start-->
+		<div class="dingdan_content">
+			<h3 style="clear:both;display:block; line-height:30px;" id="title"></h3>			
+			<li id="remain"></li>		
+			<li id="price"></li>		
+			<li id="term"></li>
+			<li id="count"></li>
+			<li id="result"></li>	
+			<div class="bk10"></div>
+			
+						
+			</li>			
+		</div>
+		<div class="bk10"></div>
+			
+		<div class="dingdan_content_user">
+			<li id="userId"></li>
+			<li id="userName"></li>
+			<li id="phoneNumber"></li>					
+			<li id="createdTime"></li>	
+			<li id="receiveInfo"></li>			
+		</div>			
+		<div class="bk10"></div>
+                
+		
+</div><!--table-list end-->
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script>
+	var id;
+	function updateWinOrder() {
+		var logisticsStatus = $("#logisticsStatus").val();
+		var logisticsCompany = $("#logisticsCompany").val();
+		var expressTradeId = $("#expressTradeId").val();
+		var carriage = $("#carriage").val();
+
+		$.ajax({
+			url: '/winOrder/update',
+			type: "POST",
+			data: {
+				id:id,
+				logisticsStatus: logisticsStatus,
+				logisticsCompany: logisticsCompany,
+				expressTradeId: expressTradeId,
+				carriage: carriage
+			},
+			success: function (data) {
+				console.log(data);
+				if (data.code == 200) {
+					location.reload();
+				} else {
+
+				}
+			},
+			error: function (data) {
+				console.log(data);
+			}
+		})
+	}
+	$.ajax({
+		'url': '/admin/admin/isLogin',
+		'type': 'GET',
+		'async': false,
+		success: function (data) {
+			if (data.code != 200) {
+				window.location.href = '/admin/login.html';
+			}
+		}
+	});
+	window.onload = function () {
+		$.ajax({
+			url: "/admin/order/orderDetail"+location.search,
+			type: "GET",
+			success: function (data) {
+				console.log(data);
+				if (data.code == 200) {
+					var obj = data.data;
+					$("#title").text(obj[0].title);
+					$("#remain").html("<b class='api_b'>剩余次数：</b>"+(obj[0].price-obj[0].saleCount)+" 人次");
+					$("#price").html("<b class='api_b'>总需次数：</b>"+obj[0].price+"人次");
+					$("#term").html("<b class='api_b'>商品期数：</b>第 "+obj[0].term+" 期");
+					$("#count").html("<b class='api_b'>购买次数：</b>"+obj[0].count+"人次");
+					$("#result").html("<b class='api_b'><font color='#ff0000'>中奖幸运码</font></b>"+(obj[0].result ? obj[0].result : "未开奖"));
+					$("#userId").html("<b class='api_b'>购买人ID：</b> "+obj[0].userId);
+					$("#userName").html("<b class='api_b'>购买人昵称：</b> "+obj[0].userName);
+					$("#phoneNumber").html("<b class='api_b'>购买人手机：</b>"+obj[0].phoneNumber);
+					$("#createdTime").html("<b class='api_b'>购买时间：</b>"+(obj[0].buyTime ? obj[0].buyTime : '还未购买'));
+					$("#receiveInfo").html("<b class='api_b'>收货信息：</b>"+(obj[0].logisticsStatus>0 ? (obj[0].address ?(obj[0].address.province+obj[0].address.city+obj[0].address.area+obj[0].address.street+"	手机："+obj[0].address.phoneNumber+"	姓名："+obj[0].address.receiver):"数据库信息不一致！"):"该用户尚未确认收货地址"));
+					if (obj[0].isWin == 1) {
+						id = obj[0].winOrder.id;
+						var str = "<div class='dingdan_content_user'>"+
+										"<li><b class='api_b'>当前状态:</b><font color='#0c0'>已付款,已完成,"+(obj[0].winOrder.logisticsStatus <= 1 ? "未发货" :(obj[0].winOrder.logisticsStatus == 2 ? "已发货" : "已收货"))+"</font></li>"+		
+										"<li>"+
+										"<b class='api_b'>物流公司:</b><input type='text' id='logisticsCompany' name='company' value='"+(obj[0].winOrder.logisticsCompany ? obj[0].winOrder.logisticsCompany : '')+"' class='input-text wid150'> 请自行填写物流公司名称"+
+										"</li>"+
+										"<li>"+
+										"<b class='api_b'>快递单号:</b><input type='text' id='expressTradeId' name='company_code' value='"+(obj[0].winOrder.expressTradeId ? obj[0].winOrder.expressTradeId : '')+"' class='input-text wid150'> 填写物流公司快递单号"+
+										"</li>"+
+										"<li>"+
+										"<input type='submit' class='button' value='  发货  ' onclick='updateWinOrder()'>"+
+										"</li>"+
+								"</div>";
+						$("#content").append(str);
+					}
+				}
+			}
+		})
+	}
+</script>
+
+ </body></html>

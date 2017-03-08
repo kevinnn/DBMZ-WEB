@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台首页</title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<style>
+body{ background-color:#fff}
+#category_select span{
+	border:1px solid #ccc;
+	background:#eee;
+	padding:3px;
+}
+#category_select b{
+ color:#f00;cursor:pointer;
+}
+#category_select input{
+	width:0px;border:0px;
+}
+</style>
+
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">添加品牌</h3>
+	<span class="span_fenge lr10"></span>
+	<a href="/views/admin/brand.html">品牌管理</a>
+	<span class="span_fenge lr5">|</span>
+	<a href="/views/admin/brandAdd.html">添加品牌</a>
+	<span class="span_fenge lr5">|</span>
+</div>
+<div class="bk10"></div>
+
+<div class="table_form lr10">
+<table width="100%"  cellspacing="0" cellpadding="0">
+    <tr>
+		<td align="right">品牌名称：</td>
+		<td><input type="text"  id="name" class="input-text wid100"></td>
+	</tr>
+    <tr height="60px">
+			<td align="right"></td>
+			<td><input class="button" type="submit" value=" 添加 " id="submit"/></td>
+	</tr>
+</table>
+</div>
+
+
+
+<script src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        url:'/admin/admin/isLogin',
+        type:'GET',
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = '/admin/login.html';
+            }
+        }
+    })
+</script>
+<script>
+	var element = document.getElementById('submit');
+	element.onclick = function (event) {
+		var that = this;
+		that.value = ' 添加中 ';
+		that.disabled = true;
+		$.ajax({
+			url: '/admin/brand/addBrand',
+			type: 'POST',
+			data: {
+				name:$('#name').val()
+			},
+			success: function (data) {
+				if (data.code == 200) {
+					that.value = ' 添加 ';
+					that.disabled = false;
+					location.href = '/views/admin/brand.html';
+				}
+			}
+		})
+	}
+</script>
+
+</body>
+</html>

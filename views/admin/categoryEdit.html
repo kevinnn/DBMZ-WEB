@@ -1,0 +1,235 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<script src="/public/js/jquery/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/public/webuploader/webuploader.css">
+<script type="text/javascript" src="/public/webuploader/webuploader.js"></script>
+<style>
+iframe{ font-size:36px;}
+.con-tab{ margin:10px; color:#444}
+.con-tab #tab-i{ margin-left:20px; overflow:hidden; height:27px; _height:28px; }
+.con-tab #tab-i li{
+	float:left;background:#eaeef4;
+	padding:0 8px;border:1px solid #dce3ed;
+	height:25px;_height:26px;line-height:26px;
+	margin-right:5px;cursor: pointer; position:relative;z-index:0;
+}
+.con-tab div.con-tabv{
+	clear:both; border:1px solid #dce3ed;
+	width:100%;
+	margin-top:-1px; padding-top:30px;
+	background-color:#fff; position:relative; z-index:1;}
+
+#tab-i li.on{ background-color:#fff;color:#444; font-weight:bold; border-bottom:1px solid #fff;  position:relative;z-index:2;}
+
+table th{ border-bottom:1px solid #eee; font-size:12px; font-weight:100; text-align:right; width:200px;}
+table td{ padding-left:10px;}
+.con-tabv tr{ text-align:left}
+input.button{ display:inline-block}
+</style>
+<script type="text/javascript">
+    $.ajax({
+        url:'/admin/admin/isLogin',
+        type:'GET',
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = '/admin/login.html';
+            }
+        }
+    })
+</script>
+<script type="text/javascript">
+  $.ajax({
+    url: '/admin/category/categoryEdit'+location.search,
+    type: 'GET',
+    success: function (data) {
+      if (data.code == 200) {
+        var category = data.data;
+        var str = '';
+        $('#name').val(category['name']);
+        if (category['coverUrl']) {
+          $('#coverUrl').val(category['coverUrl']);
+
+          $('#coverList').html('<div class="file-item thumbnail" style="display:inline-block;margin-right:10px;">' +'<img src="'+category["coverUrl"]+'">' +'</div>');
+        }
+        $('#isOn').val(category['isOn']);
+        $('#id').val(category['id']);
+      }
+    }
+  });
+
+</script>
+
+</head>
+<body marginwidth="0" marginheight="0">
+<div class="header lr10">
+  <a href="/views/admin/category.html">所有分类</a>
+  <span class="span_fenge lr5">|</span>
+  <a href="/views/admin/categoryAdd.html">添加分类</a></div>
+</div>
+<div class="bk10"></div>
+<div class="table-list con-tab lr10" id="con-tab">
+<div name="con-tabv" class="con-tabv null" style="display: block;">
+  <input style="display: none;" id='id' type='text'>
+  <table width="100%" class="table_form">
+    <tbody>    
+      <tr>
+        <th>栏目名称：</th>
+        <td>
+          <input type="text" id="name" class="input-text wid140" onkeyup="">
+          <span><font color="#0c0">※ </font>请输入栏目名称</span>
+  		  </td>
+      </tr>
+      <tr>
+        <th>栏目图片：</th>
+        <td>
+          <div id="coverList" class="uploader-list"></div>
+          <div id="coverPicker" class="webuploader-container">选择图片</div>
+          <input style="display:none;" type="text" name="coverUrl" id="coverUrl"/>
+        </td>
+      </tr>
+      <tr>
+        <th>是否展示在首页</th>
+        <td>
+          <select class="wid50" id="isOn">
+            <option value="1">是</option>
+            <option value="0">否</option>
+          </select>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+</div>
+<!--table-list end-->
+
+   <div class="table-button lr10">
+    	  <input type="button" value=" 修改 " onclick="updateCategory()" class="button" id="submit">
+   </div>
+<script type="text/javascript">
+  function updateCategory() {
+    $('#submit').val(" 修改中 ");
+    $('#submit').disabled = false;
+    $.ajax({
+      url: '/admin/category/updateCategory',
+      type: 'POST',
+      data: {
+        'id': $('#id').val(),
+        'name': $('#name').val(),
+        'isOn': $('#isOn').val(),
+        'coverUrl': $('#coverUrl').val()
+      },
+      success: function (data) {
+        location.href = "/views/admin/category.html";
+      }
+    })
+  }
+</script>
+<script type="text/javascript">
+  jQuery(function() {
+    var $ = jQuery,
+        $coverList = $('#coverList'),
+        // 优化retina, 在retina下这个值是2
+        ratio = window.devicePixelRatio || 1,
+
+        // 缩略图大小
+        thumbnailWidth = 100 * ratio,
+        thumbnailHeight = 100 * ratio,
+
+        // Web Uploader实例
+        uploader;
+
+    // 初始化Web Uploader
+    uploader = WebUploader.create({
+
+        // 自动上传。
+        auto: true,
+
+        // swf文件路径
+        swf: '/public/webuploader/Uploader.swf',
+
+        // 文件接收服务端。
+        server: '/uploader/category/coverUrl',
+
+        // 选择文件的按钮。可选。
+        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+        pick: '#coverPicker',
+
+        // 只允许选择文件，可选。
+        accept: {
+            title: 'Images',
+            extensions: 'gif,jpg,jpeg,bmp,png',
+            mimeTypes: 'image/*'
+        }
+    });
+
+    // 当有文件添加进来的时候
+    uploader.on( 'fileQueued', function( file ) {
+        var $li = $(
+                '<div id="' + file.id + '" class="file-item thumbnail" style="display:inline-block;margin-right:10px;">' +
+                    '<img>' +
+                    '<div class="info">' + file.name + '</div>' +
+                '</div>'
+                ),
+            $img = $li.find('img');
+
+        $coverList.html( $li );
+
+        // 创建缩略图
+        uploader.makeThumb( file, function( error, src ) {
+            if ( error ) {
+                $img.replaceWith('<span>不能预览</span>');
+                return;
+            }
+
+            $img.attr( 'src', src );
+        }, thumbnailWidth, thumbnailHeight );
+    });
+
+    // 文件上传过程中创建进度条实时显示。
+    uploader.on( 'uploadProgress', function( file, percentage ) {
+        var $li = $( '#'+file.id ),
+            $percent = $li.find('.progress span');
+
+        // 避免重复创建
+        if ( !$percent.length ) {
+            $percent = $('<p class="progress"><span></span></p>')
+                    .appendTo( $li )
+                    .find('span');
+        }
+
+        $percent.css( 'width', percentage * 100 + '%' );
+    });
+
+    // 文件上传成功，给item添加成功class, 用样式标记上传成功。
+    uploader.on( 'uploadSuccess', function( file, response ) {
+        if (response.code == 200) {
+            $('#coverUrl').val(response.data);
+        }
+        $( '#'+file.id ).addClass('upload-state-done');
+    });
+
+    // 文件上传失败，现实上传出错。
+    uploader.on( 'uploadError', function( file ) {
+        var $li = $( '#'+file.id ),
+            $error = $li.find('div.error');
+
+        // 避免重复创建
+        if ( !$error.length ) {
+            $error = $('<div class="error"></div>').appendTo( $li );
+        }
+
+        $error.text('上传失败');
+    });
+
+    // 完成上传完了，成功或者失败，先删除进度条。
+    uploader.on( 'uploadComplete', function( file ) {
+        $( '#'+file.id ).find('.progress').remove();
+    });
+});
+</script>
+ </body>
+ </html>

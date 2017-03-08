@@ -1,0 +1,46 @@
+<ion-view view-title="支付结果" class="payresult-page" cache-view=false>
+
+	<ion-nav-bar class="bar-stable">
+	</ion-nav-bar>
+
+	<ion-content>
+		
+		<div class="pay-result hide" ng-class="{'show':init}">
+			<p class="result-title" ng-show="isPay==1 && successOrders.length > 0"><span class="result-icon success"></span>参与夺宝成功！</p>
+			<p class="result-title yellow-color" ng-show="isPay==1 && successOrders.length == 0"><span class="result-icon failed"></span>参与夺宝失败</p>
+			<p class="result-title yellow-color" ng-show="isPay==0"><span class="result-icon failed"></span>支付失败</p>
+			
+			<p class="result-subtitle" ng-show="isPay==1 && successOrders.length > 0">请等待系统揭晓结果</p>
+			<p class="result-subtitle" ng-show="isPay==1 && successOrders.length == 0">{{failOrders.length}}件商品参与失败</p>
+			<div class="buttons" ng-show="isPay==1">
+				<button class="custom-button keep-on" ng-click="backToIndex()">继续夺宝</button>
+				<button class="custom-button check-record" ng-show="successOrders.length != 0" ng-click="backToProfile('recordBuy')">查看记录</button>
+				<button class="custom-button check-record" ng-show="successOrders.length == 0" ng-click="backToProfile('balance')">查看余额</button>
+			</div>
+			<div class="buttons" ng-show="isPay==0">
+				<button class="custom-button keep-on" ng-click="backToIndex()">继续夺宝</button>
+				<button class="custom-button check-record" ng-click="repay()">重新支付</button>
+			</div>
+		</div>
+
+		<div class="success-list hide" ng-class="{'show':init}" ng-show="successOrders.length > 0" ng-cloak>
+			<p class="title">成功参与<span class="main-color">{{successOrders.length}}</span>件商品，共<span class="main-color">{{successCount}}</span>人次</p>
+			<div class="item" ng-repeat="order in successOrders track by $index">
+				<p class="product-title">{{order.title}}</p>
+				<span class="right"><span class="main-color">{{order.count}}</span>人次</span>
+				<p class="yungou-term">商品期号：{{order.term}}</p>
+				<p class="yungou-number">夺宝号码：{{order.numberStart}}<span class="check-more" ng-show="order.numberEnd-order.numberStart > 0" ng-click="showNumbers(order.title,order.term,order.numberStart,order.numberEnd)">查看更多</span></p>
+			</div>
+		</div>
+
+		<div class="failed-list hide" ng-class="{'show':init}" ng-show="failOrders.length > 0" ng-cloak>
+			<p class="title">以下商品参与失败，金额将会返回到账户余额</p>
+			<div class="item" ng-repeat="order in failOrders track by $index">
+				<p class="product-title">{{order.title}}<span class="right">{{order.count}}人次</span></p>
+				<p class="yungou-term">商品期号：{{order.term}}</p>
+			</div>
+		</div>
+
+	</ion-content>
+	
+</ion-view>

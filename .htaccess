@@ -1,0 +1,141 @@
+<IfModule mod_rewrite.c>
+	RewriteEngine on
+
+	# 首页
+	RewriteRule ^$ views/pages/index.php
+	RewriteRule ^index\.html$ views/pages/index.php
+	RewriteRule ^header2\.html$ views/pages/header2.php
+	RewriteRule ^footer2\.html$ views/pages/footer2.php
+
+	# 分类 100.html 为 listAll 搜索在后面带参?search=XX XX 搜索字段
+	RewriteRule ^list/(\d+)\.html$ views/pages/list.php
+	RewriteRule ^list/listAll.html$ views/pages/list.php
+
+	# 云购详细页
+	RewriteRule ^detail/(\d+)\.html$ service/public/detail.php?pid=$1
+	RewriteRule ^detail/(\d+)-(\d+)\.html$ views/pages/detail.php?pid=$1&tid=$2
+
+	# 晒单
+	RewriteRule ^show$ views/pages/show.php
+
+	# 购物车
+	RewriteRule ^cartIndex$ views/pages/payment/cartIndex.php
+
+	# 订单页面
+	# RewriteRule ^order$ views/pages/payment/order.php
+
+	# 十元专区
+	RewriteRule ^ten_zone$ views/pages/ten_zone.php
+
+	# 支付页面
+	RewriteRule ^payment$ views/pages/payment/payment.php
+
+	# 支付完成页面
+	# 支付完成页面 php angular控制是否参加成功
+	RewriteRule ^payment_finish$ views/pages/payment/payment_finish.php
+
+	# 晒单详情
+	RewriteRule ^showDetail$ views/pages/showDetail.php
+
+
+	# 微信支付
+	RewriteRule ^weixinPay$ views/pages/payment/weixin_pay.php
+
+	# 手机网站
+	RewriteRule ^mobile.html$ views/mobile/mobile.php
+
+	# 最新揭晓
+	RewriteRule ^results\.html views/pages/results.php
+
+	# 幸运记录 
+	RewriteRule ^profile/winDetail.html$ views/pages/winDetail.php
+	RewriteRule ^profile/winDetail_finish.html$ views/pages/winDetail_finish.php
+
+	# 个人账户
+	RewriteRule ^profile$ views/pages/profile.php
+
+	
+
+	# 他人账户
+	RewriteRule ^user/([0-9a-zA-Z]+)\.html$ views/pages/user.php?uid=$1
+
+	# 充值页面
+	RewriteRule ^recharge$ views/pages/payment/recharge.php
+	
+	# 充值成功
+	RewriteRule ^recharge_finish$ views/pages/payment/recharge_finish.php
+
+
+	# 帮助中心
+	RewriteRule ^helpcenter$ views/pages/helpcenter.php
+
+	# 管理后台
+	RewriteRule ^admin/login\.html$ views/admin/login.php
+	RewriteRule ^admin/index\.html$ views/admin/index.php
+	RewriteRule ^uploader/([a-z0-9A-Z]+)/([a-z0-9A-Z]+)$ service/admin/uploader.php/$1/$2
+	RewriteRule ^admin/([a-z0-9A-Z]+)/([a-z0-9A-Z]+)$ service/admin/$1.php/$2
+
+	# API
+	RewriteRule ^user/getUserMobile$ service/public/user.php/getUserMobile
+	RewriteRule ^user/([a-z0-9A-Z]+)$ service/app/user.php/$1
+	RewriteCond %{QUERY_STRING} ^id=(\d+)$
+
+	RewriteRule ^yungou/getCategory$ service/public/yungou.php/getCategory?id=%1
+	RewriteRule ^yungou/getYgForShow$ service/app/yungou.php/getYgForShow
+	RewriteRule ^yungou/([a-z0-9A-Z]+)$ service/public/yungou.php/$1
+	
+
+	RewriteRule ^shoppingCart/([a-z0-9A-Z]+)$ service/app/shoppingCart.php/$1
+
+	RewriteRule ^order/winOrder$ service/public/order.php/winOrder
+	RewriteRule ^order/ordering$ service/public/order.php/ordering
+	RewriteRule ^order/orderByYungou$ service/public/order.php/orderByYungou
+	RewriteRule ^order/orderByYungouMobile$ service/public/order.php/orderByYungouMobile
+	RewriteRule ^order/getNumbers$ service/public/order.php/getNumbers
+	RewriteRule ^order/getOrderCount$ service/public/order.php/getOrderCount
+	RewriteRule ^order/getRecord$ service/public/order.php/getRecord
+	RewriteRule ^order/getCountRecord$ service/public/order.php/getCountRecord
+	RewriteRule ^order/getWinRecord$ service/public/order.php/getWinRecord
+	RewriteRule ^order/getCountWinRecord$ service/public/order.php/getCountWinRecord
+	RewriteRule ^order/winOrderDetail$ service/public/order.php/winOrderDetail
+	RewriteRule ^order/([a-z0-9A-Z]+)$ service/app/order.php/$1
+
+	RewriteRule ^cashier/([a-z0-9A-Z]+)$ service/app/cashier.php/$1
+	RewriteRule ^category/([a-z0-9A-Z]+)$ service/public/category.php/$1
+
+	RewriteRule ^product/([a-z0-9A-Z]+)$ service/public/product.php/$1
+	
+	RewriteRule ^pay$ service/app/payment.php
+	RewriteRule ^wxPay/([a-z0-9A-Z]+)$ service/app/wxPay.php/$1
+
+
+	RewriteRule ^show/add$ service/app/show.php/add
+	RewriteRule ^show/getUnshowByUser$ service/app/show.php/getUnshowByUser
+	RewriteRule ^show/([a-z0-9A-Z]+)$ service/public/show.php/$1
+
+	RewriteRule ^address/([a-z0-9A-Z]+)$ service/app/address.php/$1
+
+	RewriteRule ^credit/([a-z0-9A-Z]+)$ service/app/credit.php/$1
+
+	RewriteRule ^banner/([a-z0-9A-Z]+)$ service/public/banner.php/$1
+
+	# 上传用户头像
+	RewriteRule ^uploader/user_avatorUrl$ service/app/uploader.php/user_avatorUrl
+
+	# 上传晒单图片
+	RewriteRule ^uploader/show$ service/app/uploader.php/show
+
+	RewriteRule ^winOrder/update$ service/admin/winOrder.php/update
+	RewriteRule ^winOrder/confirm$ service/app/winOrder.php/confirm
+	RewriteRule ^winOrder/getById$ service/app/winOrder.php/getById
+	RewriteRule ^winOrder/confirmAddress$ service/app/winOrder.php/confirmAddress
+	
+	RewriteRule ^wx/([a-z0-9A-Z]+)$ service/public/wx.php/$1
+	
+	RewriteRule ^delegate/([a-z0-9A-Z]+)$ service/app/delegate.php/$1
+
+	# 账户余额
+	RewriteRule ^balance/getByTradeId$ service/app/balance.php/getByTradeId
+	RewriteRule ^balance/getBalanceByUser$ service/app/balance.php/getBalanceByUser
+
+</IfModule>

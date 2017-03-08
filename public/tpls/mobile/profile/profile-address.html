@@ -1,0 +1,48 @@
+<ion-view view-title="{{viewTitle}}" class="profile-address-page has-tabs-top" cache-view=false>
+
+    <ion-nav-bar class="bar-stable">
+        <ion-nav-back-button></ion-nav-back-button>
+        <ion-nav-buttons side="right">
+            <button class="button button-clear" ng-click="addAddress()">添加地址</button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
+
+    <ion-content scrollbar-y="false" ng-show="addresses.length > 0" ng-cloak>
+
+        <!-- 地址 -->
+        <div class="profile-address-list" ng-class="{'profile-address-choose': !comeFromProfile}" ng-repeat="address in addresses track by $index" ng-click="editAddress(address);selectAddress({{address.id}})">
+            <div class="select-circle" ng-hide="comeFromProfile">
+                <img ng-src="/public/img/mobile/btn-checked@2x.png" alt="" ng-show="selectAddressId == address.id">
+            </div>
+            <div>
+                <p class="name">收货人： {{address.receiver}}</p>
+                <p class="phoneNumber">{{address.phoneNumber}}</p>
+                <div class="clearfloat"></div>
+            </div>
+            <div class="address-detail">
+                <div class="address-default-bar" ng-show="address.status == 1"></div>
+                <p>
+                    <span class="address-default" ng-show="address.status == 1">[默认]</span>
+                    {{address.province}}{{address.city}}{{address.area}}{{address.street}}
+                </p>
+            </div>
+            <div class="address-arrow" ng-show="comeFromProfile">
+                <i class="ion-chevron-right"></i>
+            </div>
+            <div class="clearfloat"></div>
+        </div>
+
+        <div class="confirm-address-bar">
+            <button class="button main-color confirm-address-button" ng-hide="comeFromProfile" ng-click="showConfirm()">确认地址</button>
+        </div>
+        <p style="visibility: hidden;">{{selectAddressId}}</p>
+
+    </ion-content>
+
+    <ion-content scrollbar-y="false" ng-show="addresses.length === 0" ng-cloak>
+        <div class="profile-empty-address">
+            <button class="button main-color add-address-button" ng-click="addAddress()">添加地址</button>
+        </div>
+    </ion-content>
+
+</ion-view>

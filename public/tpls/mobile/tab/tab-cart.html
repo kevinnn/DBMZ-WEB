@@ -1,0 +1,52 @@
+<ion-view view-title="购物车" class="tab-cart">
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y="false" ng-hide="shoppingCarts.length == 0 || isNull" ng-cloak id="tab-cart-content">
+		<ion-refresher pulling-text="下拉刷新.." on-refresh="doRefresh()"></ion-refresher>
+		<ion-list>
+			<ion-item class="cart-card" ng-repeat="item in shoppingCarts track by $index">
+				<button class="delete" ng-click="deleteOneItem($index)">删除</button>
+				<div class="title-wrap">
+					<p class="title">{{item.title}}</p>
+				</div>
+				<img ng-src="{{item.thumbnailUrl}}" width=75 height=75>
+				<div class="amount-wrap">
+					<p class="amout">总需<span class="blue-text">{{item.price}}</span>人次，剩余<span class="main-color">{{item.price - item.saleCount}}</span>人次</p>
+					<div class="choose-wrap">
+						<p class="choose">参与人次：</p>
+						<div class="w-number w-number-inline">
+							<a class="w-number-btn w-number-btn-minus" href="javascript:void(0);" ng-click="minusOne($index)">－</a>
+							<input type="tel" class="w-number-input" value="{{item.amount}}" ng-blur="checkInputValue($index)" ng-model="item.amount">
+							<a class="w-number-btn w-number-btn-plus" href="javascript:void(0);" ng-click="addOne($index)">＋</a>
+						</div>
+					</div>
+				</div>
+				<img ng-src="/public/img/mobile/tenyuan.png" class="tenyuan" ng-if="item.singlePrice==10">
+			</ion-item>
+			<div class="clear"></div>
+		</ion-list>
+	</ion-content>
+	
+  	<div class="cart-accout" ng-hide="shoppingCarts.length == 0 || isNull">
+		<div class="accout">
+			<p class="price">总计：<span class="main-color">{{getTotal()}}</span> 元</p>
+			<p class="total">共{{getAmount()}}件商品</p>
+		</div>
+		<a class="cashier" ng-click="addCashier()">
+			<span>去结算</span>
+		</a>
+	</div>
+
+	<!-- 购物车空 -->
+    <div class="cart-null" ng-show="shoppingCarts.length !== 0 || !isNull" ng-cloak>
+		<img src="/public/img/mobile/mobile-cart.png" class="cart-car">
+			<p class="null">购物车空空的</p>
+		<div class="duobao">
+		<a href="#/tab/index">立即夺宝</a>
+		</div>
+	</div>	
+	
+</ion-view>

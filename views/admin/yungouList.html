@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<style>
+tbody tr{ line-height:30px; height:30px;} 
+</style>
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">云购列表</h3>
+</div>
+<div class="bk10"></div>
+<div class="table-list lr10">
+<!--start-->
+<table width="100%" cellspacing="0">
+    <thead>
+		<tr>
+        	<th align="center">id</th>
+            <th align="center">商品标题</th>
+            <th align="center">期数</th>
+            <th align="center">出售次数</th>
+            <th align="center">总价</th>
+            <th align="center">状态</th>
+            <th align="center">进入倒计时/揭奖时间</th>
+            <th align="center">A值</th>
+            <th align="center">B值</th>
+            <th align="center">中奖号码</th>
+            <th align="center">中奖订单</th>
+            <th align="center">管理</th>
+		</tr>
+    </thead>
+    <tbody id="tbody">
+  	</tbody>
+</table>
+<div class="btn_paixu"></div>
+<div id="pages">
+    <ul>
+        <li id="totalPage"></li>
+        <li><a id="Page_Prev" href="javascript:void(0);">上一页</a></li>
+        <li><a id="Page_Next" href="javascript:void(0);">下一页</a></li>
+        <li><a id="Page_One" href="javascript:void(0);">首页</a></li>
+        <li><a id="Page_End" href="javascript:void(0);">尾页</a></li>
+    </ul>
+</div>
+</div><!--table-list end-->
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+  function getQueryString(name) {
+    var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+    var r = window.location.search.substr(1).match(reg);
+    if (r != null) return unescape(r[2]); return null;
+  }
+  $.ajax({
+      url:'/admin/admin/isLogin',
+      type:'GET',
+      success: function (data) {
+          if (data.code != 200) {
+              location.href = '/admin/login.html';
+          }
+      }
+  });
+
+  window.onload = function () {
+    $.ajax({
+      url: "/admin/yungou/yungouList"+location.search,
+      type: "GET",
+      success: function (data) {
+        if (data.code == 200) {
+          console.log(data);
+          var arr = data.data;
+          var str = "";
+          for (var i = 0; i < arr.length; i++) {
+            str += "<tr>"+
+                    "<td align='center'>"+arr[i]['yungouId']+"</td>"+
+                    "<td align='center'>"+
+                      "<a href='/views/admin/yungouList.html"+(location.search == "" ? "?productId=" : location.search+"&productId=")+arr[i]['productId']+"'>"+arr[i]['title']+"</a>"+
+                    "</td>"+
+                    "<td align='center'>"+arr[i]['term']+"</td>"+
+                    "<td align='center'>"+arr[i]['saleCount']+"</td>"+
+                    "<td align='center'>"+arr[i]['price']+"</td>"+
+                    "<td align='center'>"+(arr[i]['status'] == 0 ? "未结束" : (arr[i]['status'] == 1 ? "揭晓中" : "已结束"))+"</td>"+
+                    "<td align='center'>"+(arr[i]['startTime'] ? arr[i]['startTime']+" / "+arr[i]['endTime'] : "尚未揭奖")+"</td>"+
+                    "<td align='center'>"+(arr[i]['A'] ? arr[i]['A'] : "")+"</td>"+
+                    "<td align='center'>"+(arr[i]['B'] ? arr[i]['B'] : "")+"</td>"+
+                    "<td align='center'>"+(arr[i]['result'] ? arr[i]['result'] : "")+"</td>"+
+                    "<td align='center'>"+(arr[i]['orderId'] ? ("<a href='/views/admin/orderDetail.html?id="+arr[i]['orderId']+"'>"+arr[i]['orderId']+"</a>") : "")+"</td>"+
+                    "<td align='center'>"+
+                      "<a href='/views/admin/yungouDetail.html?id="+arr[i]['yungouId']+"'>详细</a>"+
+                    "</td>"+
+                    "</tr>";
+          }
+          $("#tbody").html(str);
+        }
+      }
+    });
+    $.ajax({
+      url: "/admin/yungou/yungouCount"+location.search,
+      type: "GET",
+      success: function (data) {
+        console.log(data);
+        if (data.code == 200) {
+          var count = data.data;
+          var page = getQueryString("page");
+          page = page ? page : 1;
+          var status = getQueryString("status");
+          var productId = getQueryString("productId");
+          var queryString = status ? ("&status="+status) : "";
+          queryString += productId ? ("&productId="+productId) : "";
+          $('#totalPage').text("共 "+count+" 条");
+          if (page > 1) {
+            document.getElementById("Page_Prev").href = "/views/admin/yungouList.html?page="+((parseInt(page)-1)+queryString);
+          }
+          if (page*20 < count) {
+            document.getElementById("Page_Next").href = "/views/admin/yungouList.html?page="+((parseInt(page)+1)+queryString);
+          }
+          document.getElementById("Page_One").href = "/views/admin/yungouList.html?page=1"+queryString;
+          if (count != 0) {
+            var end = parseInt(count/20) + (count%20 != 0 ? 1 : 0);
+            document.getElementById("Page_End").href = "/views/admin/yungouList.html?page="+(end+queryString);
+          }
+        }
+      }
+    })
+  }
+</script>
+</body>
+</html> 

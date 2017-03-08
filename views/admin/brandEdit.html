@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>后台首页</title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<style>
+body{ background-color:#fff}
+#category_select span{
+	border:1px solid #ccc;
+	background:#eee;
+	padding:3px;
+}
+#category_select b{
+ color:#f00;cursor:pointer;
+}
+#category_select input{
+	width:0px;border:0px;
+}
+</style>
+
+</head>
+<body>
+<div class="header lr10">
+	<a href="/views/admin/brand.html">品牌管理</a>
+	<span class="span_fenge lr5">|</span>
+	<a href="/views/admin/brandAdd.html">添加品牌</a>
+</div>
+<div class="bk10"></div>
+
+<div class="table_form lr10">
+<table width="100%"  cellspacing="0" cellpadding="0">
+    <tr>
+			<td align="right">品牌名称：</td>
+			<td><input type="text"  name="name" class="input-text wid100" id="name" disabled></td>
+	</tr>
+    <tr height="60px">
+			<td align="right"></td>
+			<td><input class="button" type="submit" name="dosubmit" value=" 修改 " id="submit" onclick="updateBrand()" /></td>
+			<input style="display: none;" type='text' id="id" />
+	</tr>
+</table>
+</div>
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+    $.ajax({
+        url:'/admin/admin/isLogin',
+        type:'GET',
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = '/admin/login.html';
+            }
+        }
+    })
+</script>
+<script type="text/javascript">
+	$.ajax({
+		url: '/admin/brand/brandEdit'+location.search,
+		type: 'GET',
+		success: function (data) {
+			if (data.code == 200) {
+				document.getElementById('name').disabled = false;
+				var obj = data.data;
+				$('#name').val(obj[0].name);
+				$('#id').val(obj[0].id);
+			}
+		}
+	});
+	function updateBrand() {
+		$('#submit').val(' 修改中 ');
+		document.getElementById('submit').disabled = true;
+		var name = $('#name').val();
+		var id = $('#id').val();
+		$.ajax({
+			url: '/admin/brand/updateBrand',
+			type: 'POST',
+			data: {
+				id: id,
+				name: name
+			},
+			success: function (data) {
+				if (data.code == 200) {
+					location.href = '/views/admin/brand.html';
+				}
+			}
+		});
+	}
+</script>
+</body>
+</html>

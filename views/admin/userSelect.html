@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title></title>
+<link rel="stylesheet" href="/public/css/admin/global.css" type="text/css">
+<link rel="stylesheet" href="/public/css/admin/style.css" type="text/css">
+<script type="text/javascript" src="/public/js/jquery/jquery.min.js"></script>
+<script type="text/javascript">
+	$.ajax({
+        url:"/admin/admin/isLogin",
+        type:"GET",
+        success: function (data) {
+            if (data.code != 200) {
+                location.href = "/admin/login.html";
+            }
+        }
+    });
+</script>
+<style>
+table th{ border-bottom:1px solid #eee; font-size:12px; font-weight:100; text-align:right; width:200px;}
+table td{ padding-left:10px;}
+input.button{ display:inline-block}
+</style>
+</head>
+<body>
+<div class="header lr10">
+	<h3 class="nav_icon">查找会员</h3></div>
+<div class="bk10"></div>
+<div class="table_form lr10">
+<!--start-->
+<table width="100%" cellspacing="0">
+ 	<tr>
+		<td align="left" width="150">搜索条件：
+			<select id="selected">
+				<option value="id">会员id</option>
+				<option value="userName">会员昵称</option>
+				<option value="phoneNumber">会员手机</option>
+			</select>
+		</td>
+		<td align="left" width="160"><input type="text" id="content" class="input-text"></td>
+		<td align="left">		
+        <input type="submit" class="button" id="dosubmit" value="确认搜索">
+        </td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td></td>
+	</tr>
+	<tr>
+        <td align='center'>ID</td>
+        <td align='center'>用户类型</td>
+        <td align='center'>用户名</td>
+        <td align='center'>手机</td>
+        <td align='center'>账户余额</td>
+		<td align='center'>积分</td> 
+		<td align='center'>备注</td>
+		<td align='center'>登陆时间,地址,IP</td>
+		<td align='center'>注册时间</td>		
+		<td align='center'>邀请码</td>
+        <td align='center'>管理</td>
+	</tr>
+  	<tbody id="tbody">
+
+	</tbody>
+</table>
+</div><!--table-list end-->
+<script type="text/javascript">
+	function deleteUser (id) {
+		if (confirm("是否删除")) {
+			$.ajax({
+				url: "/admin/user/deleteUser",
+				type: "POST",
+				data: {
+					id : id
+				},
+				success: function (data) {
+					if (data.code == 200) {
+						location.reload();
+					}
+				}
+			})
+		}
+	}
+	document.getElementById("dosubmit").onclick = function () {
+		var content = $("#content").val();
+		var selected = $("#selected").val();
+		$.ajax({
+			url: "/admin/user/selectUser?"+selected+"="+content,
+			type : "GET",
+			success: function (data) {
+				if (data.code == 200) {
+					var arr = data.data;
+					var str = "";
+					for (var i = 0; i < arr.length; i++) {
+						str += "<tr>"+
+								"<td align='center'>"+arr[i].id+"</td>"+
+								"<td align='center'>"+(arr[i].type == 1 ? "手机" : (arr[i].type == 2 ? "微信" : "QQ"))+"</td>"+
+								"<td align='center'>"+arr[i].userName+"</td>"+
+								"<td align='center'>"+arr[i].phoneNumber+"</td>"+
+								"<td align='center'>"+arr[i].balance+"</td>"+
+								"<td align='center'>"+arr[i].credits+"</td>"+
+								"<td align='center'>"+(arr[i].remark == null ? "无" : arr[i].remark)+"</td>	"+
+								"<td align='center'>"+(arr[i].loginTime == null ? "未登录" : (arr[i].loginTime+","+(arr[i].loginArea==null ? "" : arr[i].loginArea)+","+(arr[i].ip == null ? "" : arr[i].ip)))+"</td>"+
+								"<td align='center'>"+(arr[i].registerTime == null ? "" : arr[i].registerTime)+"</td>"+
+								"<td align='center'>"+(arr[i].code == null ? "无" : arr[i].code)+"</td>"+
+								"<td align='center'>"+
+									"[<a href='/views/admin/userEdit.html?id="+arr[i].id+"'>修改</a>]"+
+									"[<a href='javascript:void(0);' onclick='deleteUser("+arr[i].id+")'>删除</a>]"+
+							   "</td>"+
+							"</tr>";
+					}
+					$("#tbody").html(str);
+				}
+			}
+		});
+	}
+</script>
+
+ </body></html>

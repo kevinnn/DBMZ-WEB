@@ -1,0 +1,154 @@
+@charset "utf-8";
+/* CSS Document */
+html,body{ overflow:hidden;}
+#header{height:80px; position:absolute;top:0px;left:0px;}
+#left{ position:absolute;background:#f7fbfc; left:0px; }
+#right{ position:absolute; left:221px;}
+
+
+#header{background:#023B4C url(../image/logo.png) no-repeat -0px 0px;}
+#left{
+	border-right:1px solid #c2d0d9;
+	overflow-x:hidden;
+	overflow-y:auto;
+}
+
+#header .logo{ width:220px; height:80px; float:left;background:#023B4C url(../image/logo.png) no-repeat -0px 0px; }
+
+
+#header .nav{position:absolute; }
+#header .nav a{ text-decoration:none}
+#header .nav li{ float:left;height:40px; line-height:45px; margin-right:15px;}
+
+.top-nav {WIDTH:100%; BaCKGROUND: #2d2e30; HEIGHT: 31px;}
+.top-navleft{display:inline-block;float:left;COLOR: #cbedff;line-height:31px;PaDDING-LEFT: 10px;font-size:13px;}
+.top-nav ul {
+	float:right;PaDDING-BOTTOM: 2px; liNE-HEIGHT: 20px; PaDDING-LEFT: 0px; PaDDING-RIGHT: 8px; HEIGHT: 20px; COLOR: #999; PaDDING-TOP: 6px
+}
+.top-nav li {
+	PaDDING-LEFT: 4px; DISPLaY: inline; COLOR: #cbedff;FLOaT: left;MaRGIN-LEFT: 2px
+}
+.top-nav li a {
+	PaDDING-LEFT: 4px; BaCKGROUND:#006599; COLOR: #cbedff;border-radius:3px;
+}
+.top-nav li a:hover {
+	BaCKGROUND:#ff5a00; COLOR: #fff;
+}
+.top-nav li a span{
+	PaDDING-RIGHT: 4px;
+}
+.top-nav li a:hover span{
+	BaCKGROUND-POSITION: 100% -128px
+}
+.top-nav li.adminid {
+	PaDDING-BOTTOM: 0px; PaDDING-LEFT: 24px; PaDDING-RIGHT: 0px; MaX-WIDTH: 150px; WHITE-SPaCE: nowrap; BaCKGROUND: url(/public/img/admin/bg_position.png) no-repeat -350px -100px; HEIGHT: 20px; OVERFLOW: hidden; MaRGIN-RIGHT: 4px; PaDDING-TOP: 0px
+}
+
+.navbox{HEIGHT: 60px; background-color:#0190d4;}
+.navleft{float:left;width:179px;HEIGHT: 60px;background: url(../image/logom.png) no-repeat 5px 1px;}
+.navright{float:left;}
+.main-nav{Z-INDEX: 1; HEIGHT: 60px;}
+
+.main-nav ul{display:inline-block;border-left:solid 1px #084765;border-right:solid 1px #6dcffd;}
+.main-nav ul  li{float:left;}
+.main-nav ul li a{line-height: 60px;color:#fff;font-size:15px;padding:0px 15px;border-left:solid 1px #6dcffd;border-right:solid 1px #084765;}
+.main-nav ul li a:hover,.main-nav ul li.current a{color:#feff83;background-color:#007ab4;}
+.current a,.normal,.normal a{
+	display:block;
+	position:relative;
+}
+.nav .current{background:url(../image/nav_bg_1.png) no-repeat 0px 0px;border:0px solid #000;}
+.nav .normal{ background:url(../image/nav_bg_2.png) no-repeat 0px 0px;border:0px solid #008152;}
+
+.nav .current a{
+	display:block;
+	left:20px;
+	height:40px;
+	text-align:center;
+	padding-right:20px;
+	background:url(../image/nav_bg_1.png) no-repeat right top;
+	color:#023B4C;
+	top:0px;
+}
+
+.nav .normal a{
+	display:block;
+	left:20px;
+	height:40px;
+	padding-right:20px;
+	text-align:center;
+	background:url(../image/nav_bg_2.png) no-repeat right top;
+	color:#fff;
+	top:0px;
+}
+
+
+
+/**下部***/
+
+#right{ background:#e2e9eb; position:absolute;}
+#right .right_top{ 
+	height:35px; background:#e2e9eb; position:relative;left:12px;top:0px;
+
+}
+#right .right_top ul{ float:left;}
+
+.right_top .R_label{ position:absolute;left:0px;}
+.right_top .R_btn{ position:absolute; width:400px; text-align:right;right:12px; }
+
+.right_top .R_label{
+	line-height:35px; height:35px; text-indent:18px; font-size:12px; color:#666;
+	background:url(../image/skin.png) no-repeat -5px 6px;
+}
+
+
+
+.right_top .system_button{ position:relative; top:8px; font-size:12px;}
+.right_top .system_button,.system_button span{
+	margin-right:5px;
+	height:21px;
+	color:#2a8bbb;
+	background:url(../image/btn_bg.png) no-repeat 0px 0px;
+	line-height:21px;
+	text-align: center;
+	display:inline-block;
+	cursor:pointer;
+	text-decoration:none;
+
+}
+.right_top .system_button span{
+	padding-right:10px;
+	position:relative;
+	left:10px;
+	background-position:right 0px;
+}
+
+
+#right .right_left{
+	position:absolute;
+}
+.right_left a{
+	display:block;
+	width:10px;
+	height:500px;
+	text-indent:-2000px;
+	background-color:#e2e9eb;
+}
+
+.right_left a:hover{background-color:#bfd9e1;}
+
+
+#right #right_iframe{
+	position:absolute;
+	top:35px;
+	left:10px;
+	border:1px solid #fff;overflow:hidden;
+}
+#right .iframe{
+	position:absolute;
+	right:0px;
+	left:0px;
+	bottom:0px;
+	top:0px;
+	border:1px solid #bfd9e1;
+}

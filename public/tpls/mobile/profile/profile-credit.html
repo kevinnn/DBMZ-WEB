@@ -1,0 +1,39 @@
+<ion-view view-title="我的积分" class="userCredit-page" cache-view=false>
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+    	<ion-nav-buttons side="right">
+            <a class="button button-clear" ng-href="#/tab/profile/creditRecord">积分记录</a>
+        </ion-nav-buttons>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y="false">
+		<div class="userCredit">
+			<div class="content">
+				<span>{{user.credits}}</span> 积分
+				<button class="button  button-outline" ng-click="exchange()">兑换余额</button>
+			</div>
+			<p class="tip">
+				<i class="icon ion-ios-information-outline"></i>
+				100积分可兑换1元余额，每日签到送10积分！
+			</p>
+			<p class="tip">
+				<i class="icon ion-ios-information-outline"></i>
+				每次参与夺宝，都会返还购买数额相等的积分！
+			</p>
+			<div class="sign" ng-show="init && !isSignIn" ng-click="signIn()">
+				<div class="container bg-blue">
+					<i class="icon ion-edit"></i>
+					<p>每日签到</p>
+				</div>
+			</div>
+			<div class="sign" ng-show="init && isSignIn">
+				<div class="container bg-borderColor">
+					<i class="icon ion-edit"></i>
+					<p>已签到</p>
+				</div>
+			</div>
+		</div>
+	</ion-content>
+	
+</ion-view>

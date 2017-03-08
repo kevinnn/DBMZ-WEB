@@ -1,0 +1,180 @@
+<ion-view view-title="夺宝记录" class="profile-recordBuy-page has-tabs-top" cache-view=true>
+    <ion-nav-bar class="bar-stable has-tabs-top">
+        <ion-nav-back-button></ion-nav-back-button>
+        <ion-subheader-bar class="bar bar-subheader">
+            <ul>
+                <li ng-class="{active:currentStatus===0}" ng-click="changeStatus(0)"><p>全部</p></li>
+                <li ng-class="{active:currentStatus===1}" ng-click="changeStatus(1)"><p>进行中</p></li>
+                <li ng-class="{active:currentStatus===2}" ng-click="changeStatus(2)"><p>已揭晓</p></li>
+            </ul>
+            <div class="active-bar" ng-style="{'left':currentStatus*33.3333+'%','width':+33.3333+'%'}"></div>
+        </ion-subheader-bar>
+    </ion-nav-bar>
+    <ion-content scrollbar-y="false" class="ion-content has-tabs-top">
+        <ion-refresher pulling-text="下拉刷新.." on-refresh="doRefresh()"></ion-refresher>
+        <div class="nullRecord" ng-show="currentStatus == 0 && initAll && allRecords.length == 0 || currentStatus == 1 && initRemain && remainRecords.length == 0 || currentStatus == 2 && initFinish && finishRecords.length == 0">
+                <img src="/public/img/mobile/null-record@2x.png"/>
+            </div>
+        <div class="profile-recordBuy-list">
+
+            <div class="list">
+                <div ng-show="currentStatus===0" ng-repeat="record in allRecords track by $index">
+                    <img class="winner-tip" ng-show="record.isWin==1" ng-src="/public/img/mobile/winner-tip@2x.png" src="/public/img/mobile/winner-tip@2x.png">
+                    <a href="#/tab/profile/yungou-{{record.yungouId}}-{{timeStamp}}" class="item item-thumbnail-left">
+                        <img ng-src="{{record.thumbnailUrl}}" alt="{{record.title}}">
+                        <h2 class="list-title">{{record.title}}</h2>
+                        <p class="list-term">期号：{{record.term}}<button class="button button-clear button-positive button-small">查看详情</button></p>
+                        <p class="list-count">我已参与：<span class="assertive">{{record.count}}</span> 人次</p>
+                    </a>
+                    <div class="item-below-list" ng-show="record.status==2">
+                        <div class="item">
+                            <div class="left">
+                                <p>获得者：<a href="#/tab/{{activedTab}}/userRecord-{{record.winUser.userId}}">{{record.winUser.userName}}</a></p>
+                                
+                            </div>
+                            <div class="right">
+                                <p class="float-left"><span>{{record.winUser.count}}</span> 人次</p>
+                                <a class="button float-right button-outline button-assertive button-small" ng-click="toLatestYungou({{record.yungouId}})">再次购买</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-below-list" ng-show="record.status==0">
+                        <div class="item">
+                            <div class="progress">
+                                <div class="progress-text">
+                                    <p class="float-left">总需{{record.price}}人次</p>
+                                    <p class="float-right">剩余{{record.price-record.saleCount}}</p>
+                                    <div class="clearfloat"></div>
+                                </div>
+                                <div class="progress-bar">
+                                    <p class="w-progressBar-wrap">
+                                        <span class="w-progressBar-bar" ng-style="{'width':(record.saleCount/record.price)*100+'%'}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a class="button button-assertive float-right button-small" href="#/tab/{{activedTab}}/yungou-{{record.yungouId}}-{{timeStamp}}">追加</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-below-list" ng-show="record.status==1">
+                        <div class="item">
+                            <div class="left">
+                                <span class="assertive ion-android-time"><i></i></span>
+                                <p class="assertive">即将揭晓：正在计算中，请稍候...</p>
+                            </div>
+                            <div class="right">
+                                <a class="button float-right button-outline button-assertive button-small" ng-click="toLatestYungou({{record.yungouId}})">参与最新</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ion-infinite-scroll ng-if="currentStatus == 0 && allRecords.length > 0 && hasMoreDataOfAll" on-infinite="getAllRecord()" distance="2%" immediate-check=false></ion-infinite-scroll>
+                <div ng-show="currentStatus===1" ng-repeat="record in remainRecords track by $index">
+                    <img class="winner-tip" ng-show="record.isWin==1" ng-src="/public/img/mobile/winner-tip@2x.png" src="/public/img/mobile/winner-tip@2x.png">
+                    <a href="#/tab/{{activedTab}}/yungou-{{record.yungouId}}-{{timeStamp}}" class="item item-thumbnail-left">
+                        <img ng-src="{{record.thumbnailUrl}}" alt="{{record.title}}">
+                        <h2 class="list-title">{{record.title}}</h2>
+                        <p class="list-term">期号：{{record.term}}<button class="button button-clear button-positive button-small">查看详情</button></p>
+                        <p class="list-count">我已参与：<span class="assertive">{{record.count}}</span> 人次</p>
+                    </a>
+                    <div class="item-below-list" ng-show="record.status==2">
+                        <div class="item">
+                            <div class="left">
+                                <p>获得者：<a href="#/tab/{{activedTab}}/userRecord-{{record.winUser.userId}}">{{record.winUser.userName}}</a></p>
+                                
+                            </div>
+                            <div class="right">
+                                <p class="float-left"><span>{{record.winUser.count}}</span> 人次</p>
+                                <a class="button float-right button-outline button-assertive button-small" ng-click="toLatestYungou({{record.yungouId}})">再次购买</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-below-list" ng-show="record.status==0">
+                        <div class="item">
+                            <div class="progress">
+                                <div class="progress-text">
+                                    <p class="float-left">总需{{record.price}}人次</p>
+                                    <p class="float-right">剩余{{record.price-record.saleCount}}</p>
+                                    <div class="clearfloat"></div>
+                                </div>
+                                <div class="progress-bar">
+                                    <p class="w-progressBar-wrap">
+                                        <span class="w-progressBar-bar" ng-style="{'width':(record.saleCount/record.price)*100+'%'}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a class="button button-assertive float-right button-small" href="#/tab/{{activedTab}}/yungou-{{record.yungouId}}-{{timeStamp}}">追加</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-below-list" ng-show="record.status==1">
+                        <div class="item">
+                            <div class="left">
+                                <span class="assertive ion-android-time"><i></i></span>
+                                <p class="assertive">即将揭晓：正在计算中，请稍候...</p>
+                            </div>
+                            <div class="right">
+                                <a class="button float-right button-outline button-assertive button-small" ng-click="toLatestYungou({{record.yungouId}})">参与最新</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ion-infinite-scroll ng-if="currentStatus == 1 && remainRecords.length > 0 && hasMoreDataOfRemain" on-infinite="getRemainRecord()" distance="2%" immediate-check=false></ion-infinite-scroll>
+                <div ng-show="currentStatus===2" ng-repeat="record in finishRecords track by $index">
+                    <img class="winner-tip" ng-show="record.isWin==1" ng-src="/public/img/mobile/winner-tip@2x.png" src="/public/img/mobile/winner-tip@2x.png">
+                    <a href="#/tab/{{activedTab}}/yungou-{{record.yungouId}}-{{timeStamp}}" class="item item-thumbnail-left">
+                        <img ng-src="{{record.thumbnailUrl}}" alt="{{record.title}}">
+                        <h2 class="list-title">{{record.title}}</h2>
+                        <p class="list-term">期号：{{record.term}}<button class="button button-clear button-positive button-small">查看详情</button></p>
+                        <p class="list-count">我已参与：<span class="assertive">{{record.count}}</span> 人次</p>
+                    </a>
+                    <div class="item-below-list" ng-show="record.status==2">
+                        <div class="item">
+                            <div class="left">
+                                <p>获得者：<a href="#/tab/{{activedTab}}/userRecord-{{record.winUser.userId}}">{{record.winUser.userName}}</a></p>
+                                
+                            </div>
+                            <div class="right">
+                                <p class="float-left"><span>{{record.winUser.count}}</span> 人次</p>
+                                <a class="button float-right button-outline button-assertive button-small" ng-click="toLatestYungou({{record.yungouId}})">再次购买</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-below-list" ng-show="record.status==0">
+                        <div class="item">
+                            <div class="progress">
+                                <div class="progress-text">
+                                    <p class="float-left">总需{{record.price}}人次</p>
+                                    <p class="float-right">剩余{{record.price-record.saleCount}}</p>
+                                    <div class="clearfloat"></div>
+                                </div>
+                                <div class="progress-bar">
+                                    <p class="w-progressBar-wrap">
+                                        <span class="w-progressBar-bar" ng-style="{'width':(record.saleCount/record.price)*100+'%'}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="right">
+                                <a class="button button-assertive float-right button-small" href="#/tab/{{activedTab}}/yungou-{{record.yungouId}}-{{timeStamp}}">追加</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item-below-list" ng-show="record.status==1">
+                        <div class="item">
+                            <div class="left">
+                                <span class="assertive ion-android-time"><i></i></span>
+                                <p class="assertive">即将揭晓：正在计算中，请稍候...</p>
+                            </div>
+                            <div class="right">
+                                <a class="button float-right button-outline button-assertive button-small" ng-click="toLatestYungou({{record.yungouId}})">参与最新</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <ion-infinite-scroll ng-if="currentStatus == 2 && finishRecords.length > 0 && hasMoreDataOfFinish" on-infinite="getFinishRecord()" distance="2%" immediate-check=false></ion-infinite-scroll>
+            </div>
+        </div>
+    </ion-content>
+</ion-view>

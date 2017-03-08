@@ -1,0 +1,65 @@
+<ion-view view-title="我的资料" class="myInfo-page" cache-view=false>
+
+	<ion-nav-bar class="bar-stable">
+    	<ion-nav-back-button></ion-nav-back-button>
+	</ion-nav-bar>
+
+	<ion-content scrollbar-y="false">
+		<!-- 隐藏input，用于调用系统相册 -->
+		<input type="file" capture="camera" accept="image/*" onchange="angular.element(this).scope().uploadFile(this.files)" id="cameraInput" style="opacity:0;position:absolute;">
+		<div class="list myInfo">
+			<a class="item item-avatar item-icon-right" ng-click="updateAvatar()">
+				<img ng-src="{{user.avatorUrl}}"/>{{user.userName}}
+				<i class="icon ion-ios-arrow-forward border-color"></i>
+			</a>
+			<div class="div-mid">
+				<a class="item item-icon-right" href="#">
+					<span class="itemNam">ID</span>
+					<span class="itemInfo">{{user.id}}</span>
+				</a>
+				<a class="item item-icon-right" ng-class="{'hide': !nickNameHide}" ng-click="inputNickName()">
+					<span class="itemNam">昵称</span>
+					<span class="itemInfo">{{user.userName}}</span>
+					<i class="icon ion-ios-arrow-forward border-color"></i>
+				</a>
+				<a class="item item-icon-right" ng-class="{'hide': nickNameHide}">
+					<label>昵称</label>
+					<input type="text" placeholder="昵称不超过32个字符" maxlength="32" ng-model="$parent.nickName" class="itemInfo" id="nickNameInput"></input>
+					<i class="icon ion-checkmark green-color confirm" ng-click="updateNickName()"></i>
+					<i class="icon ion-close black333-text" ng-click="cancelNickName()"></i>
+				</a>
+				<a class="item item-icon-right" ng-if="!is_weixin">
+					<span class="itemNam">手机</span>
+					<span class="itemInfo">{{user.phoneNumber}}</span>
+					<i class="icon ion-ios-arrow-forward border-color"></i>
+				</a>
+				<a class="item item-icon-right" ng-if="!is_weixin">
+					<span class="itemNam">性別</span>
+					<span class="itemInfo">女</span>
+					<i class="icon ion-ios-arrow-forward border-color"></i>
+				</a>
+				<a class="item item-icon-right" ng-if="!is_weixin">
+					<span class="itemNam">生日</span>
+					<span class="itemInfo">1995年1月1日</span>
+					<i class="icon ion-ios-arrow-forward border-color"></i>
+				</a>
+				<a class="item item-icon-right" ng-if="!is_weixin">
+					<span class="itemNam">星座</span>
+					<span class="itemInfo">摩羯座</span>
+					<i class="icon ion-ios-arrow-forward border-color"></i>
+				</a>
+				<a class="item item-icon-right" ng-if="!is_weixin">
+					<span class="itemNam">签名</span>
+					<span class="itemInfo">我很棒</span>
+					<i class="icon ion-ios-arrow-forward border-color"></i>
+				</a>
+			</div>
+			<a class="item item-icon-left item-icon-right item-psd" ng-if="!is_weixin" href="#tab/profile/editPsd">
+				<i class="icon ion-ios-locked main-color"></i>修改密码
+				<i class="icon ion-ios-arrow-forward border-color"></i>
+			</a>
+			<div class="div-btm main-color" ng-click="logout()">退出登录</div>
+		</div>
+	</ion-content>
+	
+</ion-view>
